@@ -19,7 +19,7 @@ import BottomModal from '@/components/BottomModal';
 import ConfirmModal from '@/components/ConfirmModal';
 import { Events } from '@/lib/events';
 import type { AccountType, Currency } from '@/lib/types';
-import { ACCOUNT_TYPES, ACCOUNT_TYPE_LABELS } from '@/lib/utils';
+import { ACCOUNT_TYPES, ACCOUNT_TYPE_LABELS, firstEmoji } from '@/lib/utils';
 import { CURRENCIES } from '@/lib/baseCurrency';
 import { useBaseCurrency } from '@/lib/baseCurrencyContext';
 
@@ -145,7 +145,7 @@ export default function WalletScreen() {
             <AppInput
               label="Icon"
               value={form.icon}
-              onChangeText={(v) => setField('icon', v)}
+              onChangeText={(v) => setField('icon', firstEmoji(v))}
               placeholder="💰"
               style={{ width: 72 }}
             />
