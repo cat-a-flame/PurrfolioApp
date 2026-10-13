@@ -174,6 +174,8 @@ export default function WalletScreen() {
             label="Starting balance"
             value={form.starting_balance}
             onChangeText={(v) => setField('starting_balance', v)}
+            onFocus={() => { if (form.starting_balance === '0') setField('starting_balance', ''); }}
+            onBlur={() => { if (form.starting_balance.trim() === '') setField('starting_balance', '0'); }}
             keyboardType="decimal-pad"
             placeholder="0"
           />
