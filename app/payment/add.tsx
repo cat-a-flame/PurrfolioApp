@@ -235,6 +235,11 @@ export default function AddPaymentScreen() {
               style={styles.amountDisplay}
               onPress={() => amountRef.current?.focus()}
             >
+              {form.amount ? (
+                <Text style={[styles.amountText, { minWidth: 0, color: colors.text }]}>
+                  {form.type === 'income' ? '+' : '−'}
+                </Text>
+              ) : null}
               <TextInput
                 ref={amountRef}
                 value={formatAmountDisplay(form.amount)}
