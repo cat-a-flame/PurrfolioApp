@@ -77,3 +77,33 @@ export function groupByDate<T extends { date: string }>(items: T[]): { date: str
     .sort(([a], [b]) => b.localeCompare(a))
     .map(([date, items]) => ({ date, items }));
 }
+
+// Keeps only the first emoji (grapheme) of the input, so icon fields hold exactly one.
+// Hand-rolled instead of Intl.Segmenter, which Hermes may not ship.
+export function firstEmoji(input: string): string {
+  const cps = Array.from(input);
+  if (cps.length === 0) return '';
+  const code = (i: number) => cps[i].codePointAt(0)!;
+  const isRegional = (c: number) => c >= 0x1f1e6 && c <= 0x1f1ff;
+  const isExtender = (c: number) =>
+    c === 0xfe0f || c === 0xfe0e || c === 0x20e3 ||
+    (c >= 0x1f3fb && c <= 0x1f3ff) || (c >= 0xe0020 && c <= 0xe007f);
+
+  let end = 1;
+  if (isRegional(code(0)) && cps.length > 1 && isRegional(code(1))) end = 2;
+  while (end < cps.length) {
+    const c = code(end);
+    if (isExtender(c)) end++;
+    else if (c === 0x200d && end + 1 < cps.length) end += 2;
+    else break;
+  }
+  return cps.slice(0, end).join('');
+}
+
+// RFC 4122 v4 UUID. transactions.transfer_group_id is a uuid column, so it must be a real one.
+export function uuidv4(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (ch) => {
+    const r = Math.floor(Math.random() * 16);
+    return (ch === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}

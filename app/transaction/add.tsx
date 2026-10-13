@@ -19,7 +19,7 @@ import NumPad from '@/components/NumPad';
 import ConfirmModal from '@/components/ConfirmModal';
 import { Ionicons } from '@expo/vector-icons';
 import type { Wallet, Category, Label, TransactionType } from '@/lib/types';
-import { todayInputDate } from '@/lib/utils';
+import { todayInputDate, uuidv4 } from '@/lib/utils';
 import { Events } from '@/lib/events';
 import FieldError from '@/components/FieldError';
 import { useFieldErrors } from '@/lib/useFieldErrors';
@@ -238,7 +238,7 @@ export default function AddTransactionScreen() {
     if (!user) { setLoading(false); return; }
 
     if (form.type === 'transfer') {
-      const groupId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const groupId = uuidv4();
       const { error: txErr } = await supabase.from('transactions').insert([
         {
           user_id: user.id,

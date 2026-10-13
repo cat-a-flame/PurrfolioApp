@@ -16,6 +16,7 @@ import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
 import ConfirmModal from '@/components/ConfirmModal';
 import type { TransactionType } from '@/lib/types';
+import { firstEmoji } from '@/lib/utils';
 
 type CatType = TransactionType | 'both';
 
@@ -197,8 +198,7 @@ export default function CategoryScreen() {
             <AppInput
               label="Icon"
               value={form.icon}
-              onChangeText={(v) => setField('icon', v)}
-              maxLength={4}
+              onChangeText={(v) => setField('icon', firstEmoji(v))}
               placeholder="🙂"
               style={{ width: 72, textAlign: 'center' }}
             />
@@ -256,8 +256,7 @@ export default function CategoryScreen() {
                 <View style={{ width: 42 }}>
                   <AppInput
                     value={s.icon}
-                    onChangeText={(v) => patchSub(s._key, { icon: v })}
-                    maxLength={4}
+                    onChangeText={(v) => patchSub(s._key, { icon: firstEmoji(v) })}
                     style={styles.subEmojiInput}
                   />
                 </View>

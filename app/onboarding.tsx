@@ -133,6 +133,8 @@ export default function OnboardingScreen() {
             label="Starting balance"
             value={balance}
             onChangeText={setBalance}
+            onFocus={() => { if (balance === '0') setBalance(''); }}
+            onBlur={() => { if (balance.trim() === '') setBalance('0'); }}
             keyboardType="decimal-pad"
             placeholder="0"
           />
