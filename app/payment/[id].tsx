@@ -2,9 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   ScrollView,
-  KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
@@ -15,6 +13,7 @@ import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/lib/theme';
 import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
+import NumPad from '@/components/NumPad';
 import BottomModal from '@/components/BottomModal';
 import DatePickerModal from '@/components/DatePickerModal';
 import CategoryPickerModal from '@/components/CategoryPickerModal';
@@ -31,10 +30,6 @@ function formatAmountDisplay(raw: string): string {
   const [intPart, decPart] = raw.split('.');
   const grouped = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   return decPart !== undefined ? `${grouped}.${decPart}` : grouped;
-}
-
-function parseAmountInput(text: string): string {
-  return text.replace(/\s/g, '');
 }
 
 const FREQUENCIES: RecurrenceFrequency[] = ['weekly', 'biweekly', 'monthly', 'quarterly', 'yearly'];
@@ -65,7 +60,6 @@ export default function EditPaymentScreen() {
   const navigation = useNavigation();
   const { bottom } = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const amountRef = useRef<TextInput>(null);
 
   const [form, setForm] = useState<EditForm>(EMPTY_FORM);
   const [initialForm, setInitialForm] = useState<EditForm | null>(null);
@@ -141,6 +135,26 @@ export default function EditPaymentScreen() {
 
   function setField<K extends keyof EditForm>(key: K, value: EditForm[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  function handleNumPadKey(key: string) {
+    setForm((f) => {
+      const current = f.amount;
+      let next: string;
+      if (key === 'backspace') {
+        next = current.slice(0, -1);
+      } else if (key === '.') {
+        if (current.includes('.')) return f;
+        next = current === '' ? '0.' : current + '.';
+      } else if (current === '0') {
+        next = key;
+      } else if (current.includes('.') && current.split('.')[1].length >= 2) {
+        return f;
+      } else {
+        next = current + key;
+      }
+      return { ...f, amount: next };
+    });
   }
 
   function toggleLabel(lid: string) {
@@ -320,12 +334,10 @@ export default function EditPaymentScreen() {
         </View>
       </View>
 
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior="padding"
-      >
+      <View style={{ flex: 1 }}>
         <ScrollView
-          contentContainerStyle={[styles.form, { paddingBottom: 24 }]}
+          style={{ flex: 1 }}
+          contentContainerStyle={[styles.form, { paddingBottom: 8 }]}
           keyboardShouldPersistTaps="handled"
         >
           {formError ? <Text style={[styles.error, { color: colors.danger }]}>{formError}</Text> : null}
@@ -350,28 +362,16 @@ export default function EditPaymentScreen() {
 
           {/* Amount */}
           <View style={styles.amountSection}>
-            <TouchableOpacity
-              activeOpacity={1}
-              style={styles.amountDisplay}
-              onPress={() => amountRef.current?.focus()}
-            >
-              {form.amount ? (
-                <Text style={[styles.amountText, { minWidth: 0, color: colors.text }]}>
-                  {form.type === 'income' ? '+' : '−'}
-                </Text>
-              ) : null}
-              <TextInput
-                ref={amountRef}
-                value={formatAmountDisplay(form.amount)}
-                onChangeText={(v) => setField('amount', parseAmountInput(v))}
-                keyboardType="decimal-pad"
-                placeholder="0"
-                placeholderTextColor={colors.placeholder ?? colors.muted}
-                style={[styles.amountText, { color: form.amount ? colors.text : colors.muted }]}
-                textAlign="center"
-              />
-              {currency ? <Text style={[styles.amountCurrency, { color: colors.muted }]}>{currency}</Text> : null}
-            </TouchableOpacity>
+            <View style={styles.amountDisplay}>
+              <Text
+                style={[styles.amountText, { color: form.amount ? colors.text : colors.placeholder }]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
+                {form.amount ? (form.type === 'income' ? '+' : '−') : ''}{formatAmountDisplay(form.amount) || '0'}
+              </Text>
+              {currency ? <Text style={[styles.currencyLabel, { color: colors.muted }]}>{currency}</Text> : null}
+            </View>
           </View>
 
           <FieldError message={errors.amount} center />
@@ -513,13 +513,16 @@ export default function EditPaymentScreen() {
 
         </ScrollView>
 
-        {/* Sticky footer save button */}
-        <View style={[styles.stickyFooter, { paddingBottom: bottom + 16, borderTopColor: colors.border }]}>
-          <AppButton onPress={handleSave} loading={saving} fullWidth>
-            Save changes
-          </AppButton>
+        {/* Always-visible numpad + save */}
+        <View style={[styles.bottomBlock, { borderTopColor: colors.border, paddingBottom: bottom + 8, backgroundColor: colors.surface }]}>
+          <NumPad onKey={handleNumPadKey} />
+          <View style={styles.saveRow}>
+            <AppButton onPress={handleSave} loading={saving} fullWidth>
+              Save changes
+            </AppButton>
+          </View>
         </View>
-      </KeyboardAvoidingView>
+      </View>
 
       {/* Wallet picker */}
       <BottomModal visible={showWalletModal} onClose={() => setShowWalletModal(false)} title="Select account">
@@ -650,10 +653,9 @@ const styles = StyleSheet.create({
   headerBtn: { width: 40, alignItems: 'flex-start', justifyContent: 'center' },
   headerBtnRight: { width: 40, alignItems: 'flex-end', justifyContent: 'center' },
   headerTitle: { fontSize: 17, fontFamily: 'Lora_700Bold' },
-  form: { padding: 16, gap: 16, flexGrow: 1 },
-  stickyFooter: {
-    paddingHorizontal: 16, paddingTop: 12, borderTopWidth: StyleSheet.hairlineWidth,
-  },
+  form: { padding: 16, gap: 16 },
+  bottomBlock: { borderTopWidth: StyleSheet.hairlineWidth },
+  saveRow: { paddingHorizontal: 12, paddingTop: 8, paddingBottom: 4 },
   error: { fontFamily: 'Nunito_400Regular', fontSize: 14, textAlign: 'center' },
 
   typeToggle: {
@@ -663,13 +665,13 @@ const styles = StyleSheet.create({
   typeBtn: { flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 8 },
   typeBtnText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
 
-  amountSection: { alignItems: 'center' },
+  amountSection: { alignItems: 'center', gap: 4 },
   amountDisplay: {
     flexDirection: 'row', alignItems: 'flex-end',
     justifyContent: 'center', paddingVertical: 8, gap: 6,
   },
-  amountText: { fontSize: 52, fontFamily: 'Lora_400Regular', minWidth: 60, textAlign: 'center' },
-  amountCurrency: { fontSize: 15, fontFamily: 'Nunito_700Bold', marginBottom: 22 },
+  amountText: { fontSize: 52, fontFamily: 'Lora_400Regular', paddingVertical: 0 },
+  currencyLabel: { fontSize: 15, fontFamily: 'Nunito_700Bold', marginBottom: 10 },
 
   row: { flexDirection: 'row', gap: 8 },
 
