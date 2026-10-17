@@ -393,7 +393,7 @@ export default function EditPaymentScreen() {
                 style={[styles.pickerBtn, { borderColor: colors.border, backgroundColor: colors.surface }]}
                 onPress={() => setShowWalletModal(true)}
               >
-                <Text style={[styles.pickerBtnText, { color: selectedWallet ? colors.text : colors.muted }]} numberOfLines={1}>
+                <Text style={[styles.pickerBtnText, { color: selectedWallet ? colors.text : colors.muted }]}>
                   {selectedWallet ? `${selectedWallet.icon ? selectedWallet.icon + ' ' : ''}${selectedWallet.name}` : 'Wallet…'}
                 </Text>
                 <Ionicons name="chevron-forward" size={16} color={colors.muted} />
@@ -405,7 +405,7 @@ export default function EditPaymentScreen() {
                 style={[styles.pickerBtn, { borderColor: errors.category ? colors.danger : colors.border, backgroundColor: colors.surface }]}
                 onPress={() => setShowCategoryModal(true)}
               >
-                <Text style={[styles.pickerBtnText, { color: selectedCategory ? colors.text : colors.muted }]} numberOfLines={1}>
+                <Text style={[styles.pickerBtnText, { color: selectedCategory ? colors.text : colors.muted }]}>
                   {selectedCategory ? `${selectedCategory.icon ? selectedCategory.icon + ' ' : ''}${selectedCategory.name}` : 'Category…'}
                 </Text>
                 <Ionicons name="chevron-forward" size={16} color={colors.muted} />
@@ -422,7 +422,7 @@ export default function EditPaymentScreen() {
                 style={[styles.pickerBtn, { borderColor: colors.border, backgroundColor: colors.surface }]}
                 onPress={() => setShowStartDatePicker(true)}
               >
-                <Text style={[styles.pickerBtnText, { color: form.start_date ? colors.text : colors.muted }]} numberOfLines={1}>
+                <Text style={[styles.pickerBtnText, { color: form.start_date ? colors.text : colors.muted }]}>
                   {form.start_date || 'Date…'}
                 </Text>
                 <Ionicons name="calendar" size={16} color={colors.muted} />
@@ -434,7 +434,7 @@ export default function EditPaymentScreen() {
                 style={[styles.pickerBtn, { borderColor: colors.border, backgroundColor: colors.surface }]}
                 onPress={() => setShowFrequencyModal(true)}
               >
-                <Text style={[styles.pickerBtnText, { color: colors.text }]} numberOfLines={1}>
+                <Text style={[styles.pickerBtnText, { color: colors.text }]}>
                   {frequencyLabel(form.frequency)}
                 </Text>
                 <Ionicons name="chevron-forward" size={16} color={colors.muted} />

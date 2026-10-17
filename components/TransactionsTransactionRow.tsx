@@ -102,7 +102,7 @@ function TransactionsTransactionRow({ transaction: tx, onPress, onLongPress, onI
 
       {tx.notes && tx.notes.length > 0 && (
         <View style={[styles.subtext]}>
-          <Text style={[styles.sub, { color: colors.muted }]} numberOfLines={2}>
+          <Text style={[styles.sub, { color: colors.muted }]}>
             {tx.notes}
           </Text>
         </View>
@@ -151,11 +151,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   walletRow: {
+    flexShrink: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
   },
   sub: {
+    flexShrink: 1,
     fontFamily: 'Nunito_400Regular', fontSize: 13,
   },
   labelChip: {
@@ -168,6 +170,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular', fontSize: 13,
   },
   amountCol: {
+    flexShrink: 0,
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
   },
@@ -178,7 +181,8 @@ const styles = StyleSheet.create({
   walletLabelRow: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 5,
+    flexWrap: 'wrap',
+    columnGap: 5,
     alignItems: 'center',
   },
   subtext: {

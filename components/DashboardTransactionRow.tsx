@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   sub: {
+    flexShrink: 1,
     fontFamily: 'Nunito_400Regular', fontSize: 13,
   },
   labelChip: {
@@ -132,11 +133,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular', fontSize: 13,
   },
   amount: {
+    flexShrink: 0,
     fontSize: 15,
     fontFamily: 'Nunito_800ExtraBold',
   },
   walletRow: {
     display: 'flex',
+    flexShrink: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
@@ -144,7 +147,8 @@ const styles = StyleSheet.create({
   walletLabelRow: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 5,
+    flexWrap: 'wrap',
+    columnGap: 5,
     alignItems: 'center',
 }
 });

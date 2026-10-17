@@ -13,9 +13,8 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, usePathname } from 'expo-router';
-import ReportBugModal from '@/components/ReportBugModal';
-import { supabase } from '@/lib/supabase';
-import { LinearGradient } from 'expo-linear-gradient';
+import Avatar from '@/components/Avatar';
+import { useProfile } from '@/lib/profile';
 import Constants from 'expo-constants';
 import { useTheme, useDarkMode } from '@/lib/theme';
 
@@ -33,23 +32,11 @@ export default function AppHeader({ title, rightAction, showBack, onBack }: Prop
   const { isDark, setIsDark } = useDarkMode();
   const router = useRouter();
   const pathname = usePathname();
-  const [bugVisible, setBugVisible] = useState(false);
   const { top, bottom } = useSafeAreaInsets();
   const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState<string | null>(null);
-  const [username, setUsername] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { name: username, email, avatarUrl, isAdmin } = useProfile();
   const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setEmail(user?.email ?? null);
-      setUsername(user?.user_metadata?.name ?? user?.user_metadata?.full_name ?? null);
-      // app_metadata can only be changed server-side (unlike user_metadata)
-      setIsAdmin(user?.app_metadata?.role === 'admin');
-    });
-  }, []);
 
   function openDrawer() {
     slideAnim.setValue(-DRAWER_WIDTH);
@@ -75,16 +62,24 @@ export default function AppHeader({ title, rightAction, showBack, onBack }: Prop
 
   function navigate(route: string) { closeDrawer(() => router.push(route as any)); }
 
-  const menuItems: { label: string; route?: string; onPress?: () => void; icon: string }[] = [
-    { label: 'Accounts',   route: '/settings/accounts',   icon: 'wallet-outline'       },
-    { label: 'Categories', route: '/settings/categories', icon: 'grid-outline'         },
-    { label: 'Labels',     route: '/settings/labels',     icon: 'pricetag-outline'     },
-    { label: 'Security',   route: '/settings/security',   icon: 'lock-closed-outline'  },
-    { label: 'Export',     route: '/settings/export',     icon: 'download-outline'     },
-    { label: 'Report a bug', onPress: () => closeDrawer(() => setBugVisible(true)), icon: 'bug-outline' },
+  type MenuItem = { label: string; route: string; icon: keyof typeof Ionicons.glyphMap };
+  const sections: { title: string; items: MenuItem[] }[] = [
+    {
+      title: 'Manage',
+      items: [
+        { label: 'Accounts',   route: '/settings/accounts',   icon: 'wallet-outline'   },
+        { label: 'Categories', route: '/settings/categories', icon: 'grid-outline'     },
+        { label: 'Labels',     route: '/settings/labels',     icon: 'pricetag-outline' },
+      ],
+    },
+    {
+      title: 'Data & security',
+      items: [
+        { label: 'Security',        route: '/settings/security', icon: 'lock-closed-outline' },
+        { label: 'Import & export', route: '/settings/export',   icon: 'swap-vertical-outline' },
+      ],
+    },
   ];
-
-  const initial = (username || email || '?').charAt(0).toUpperCase();
 
   return (
     <>
@@ -122,43 +117,58 @@ export default function AppHeader({ title, rightAction, showBack, onBack }: Prop
             <View style={[styles.drawerInner, { paddingTop: top || 16 }]}>
               <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
-                {/* ── User info ────────────────────────────────── */}
-                <TouchableOpacity style={styles.userRow} onPress={() => navigate('/settings/account')} activeOpacity={0.7}>
-                  <LinearGradient
-                    colors={colors.gradientAccent}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.avatar}
-                  >
-                    <Text style={styles.avatarText}>{initial}</Text>
-                  </LinearGradient>
+                {/* ── Profile ──────────────────────────────────── */}
+                <TouchableOpacity
+                  style={[styles.userRow, { backgroundColor: colors.bg }]}
+                  onPress={() => navigate('/settings/account')}
+                  activeOpacity={0.7}
+                  accessibilityLabel="Open profile"
+                >
+                  <Avatar size={44} uri={avatarUrl} label={username || email} />
                   <View style={{ flex: 1 }}>
-                    <Text style={[styles.userName, { color: colors.text }]} numberOfLines={1}>
+                    <Text style={[styles.userName, { color: colors.text }]}>
                       {username || 'My Account'}
                     </Text>
                     {email ? (
-                      <Text style={[styles.userEmail, { color: colors.muted }]} numberOfLines={1}>{email}</Text>
+                      <Text style={[styles.userEmail, { color: colors.muted }]}>{email}</Text>
                     ) : null}
                   </View>
                   <Ionicons name="chevron-forward" size={18} color={colors.muted} />
                 </TouchableOpacity>
 
-                {/* ── Menu ─────────────────────────────────────── */}
-                <Text style={[styles.sectionLabel, { color: colors.muted }]}>Menu</Text>
-                {menuItems.map((item) => (
-                  <TouchableOpacity
-                    key={item.label}
-                    style={styles.row}
-                    onPress={item.onPress ?? (() => item.route && navigate(item.route))}
-                    activeOpacity={0.7}
-                  >
-                    <View style={[styles.rowIcon, { backgroundColor: colors.accentLight }]}>
-                      <Ionicons name={item.icon as any} size={18} color={colors.accent} />
-                    </View>
-                    <Text style={[styles.rowText, { color: colors.text }]}>{item.label}</Text>
-                    <Ionicons name="chevron-forward" size={16} color={colors.muted} />
-                  </TouchableOpacity>
+                {sections.map((section) => (
+                  <View key={section.title}>
+                    <Text style={[styles.sectionLabel, { color: colors.muted }]}>{section.title}</Text>
+                    {section.items.map((item) => (
+                      <TouchableOpacity
+                        key={item.label}
+                        style={styles.row}
+                        onPress={() => navigate(item.route)}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons name={item.icon} size={22} color={colors.text} />
+                        <Text style={[styles.rowText, { color: colors.text }]}>{item.label}</Text>
+                      </TouchableOpacity>
+                    ))}
+                    <View style={[styles.divider, { backgroundColor: colors.border }]} />
+                  </View>
                 ))}
+
+                <TouchableOpacity style={styles.row} onPress={() => navigate('/settings/help')} activeOpacity={0.7}>
+                  <Ionicons name="help-circle-outline" size={22} color={colors.text} />
+                  <Text style={[styles.rowText, { color: colors.text }]}>Help & about</Text>
+                </TouchableOpacity>
+                <View style={styles.row}>
+                  <Ionicons name={isDark ? 'moon-outline' : 'sunny-outline'} size={22} color={colors.text} />
+                  <Text style={[styles.rowText, { color: colors.text }]}>Dark mode</Text>
+                  <Switch
+                    value={isDark}
+                    onValueChange={setIsDark}
+                    accessibilityLabel="Dark mode"
+                    trackColor={{ false: colors.border, true: colors.accent + '88' }}
+                    thumbColor={isDark ? colors.accent : '#f4f4f4'}
+                  />
+                </View>
 
               </ScrollView>
 
@@ -168,24 +178,17 @@ export default function AppHeader({ title, rightAction, showBack, onBack }: Prop
                 </Text>
               )}
 
-              {/* Light/Dark mode toggle pinned to bottom */}
-              <View style={[styles.darkRow, { borderTopColor: colors.border, paddingBottom: bottom || 16 }]}>
-                <Ionicons name={isDark ? 'moon' : 'sunny-outline'} size={18} color={colors.muted} />
-                <Text style={[styles.rowText, { color: colors.text, flex: 1 }]}>{isDark ? 'Dark mode' : 'Light mode'}</Text>
-                <Switch
-                  value={isDark}
-                  onValueChange={setIsDark}
-                  trackColor={{ false: colors.border, true: colors.accent + '88' }}
-                  thumbColor={isDark ? colors.accent : '#f4f4f4'}
-                />
+              <View style={[styles.footer, { paddingBottom: bottom || 16 }]}>
+                <TouchableOpacity style={styles.row} onPress={() => navigate(`/settings/feedback?from=${encodeURIComponent(pathname)}`)} activeOpacity={0.7}>
+                  <Ionicons name="bug-outline" size={22} color={colors.text} />
+                  <Text style={[styles.rowText, { color: colors.text }]}>Report a bug</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </Animated.View>
           <TouchableOpacity style={{ flex: 1 }} activeOpacity={1} onPress={() => closeDrawer()} />
         </View>
       </Modal>
-
-      <ReportBugModal visible={bugVisible} page={pathname} onClose={() => setBugVisible(false)} />
     </>
   );
 }
@@ -233,53 +236,36 @@ const styles = StyleSheet.create({
   userRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    gap: 12,
+    minHeight: 64,
+    marginHorizontal: 12,
+    marginTop: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
   },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: { fontSize: 20, fontFamily: 'Nunito_800ExtraBold', color: '#fff' },
-  userName: { fontSize: 18, fontFamily: 'Lora_700Bold', letterSpacing: -0.3 },
-  userEmail: { fontSize: 13, fontFamily: 'Nunito_400Regular', marginTop: 2 },
+  userName: { flexShrink: 1, fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
+  userEmail: { flexShrink: 1, fontSize: 12, fontFamily: 'Nunito_400Regular', marginTop: 2 },
 
   sectionLabel: {
-    fontSize: 11,
+    fontSize: 12,
     fontFamily: 'Nunito_800ExtraBold',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 6,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 4,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    gap: 14,
+    minHeight: 48,
+    paddingHorizontal: 24,
   },
-  rowIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rowText: { flex: 1, fontSize: 16, fontFamily: 'Nunito_700Bold' },
+  rowText: { flex: 1, fontSize: 15, fontFamily: 'Nunito_700Bold' },
+  divider: { height: StyleSheet.hairlineWidth, marginHorizontal: 24, marginTop: 8 },
 
-  version: { fontSize: 12, fontFamily: 'Nunito_600SemiBold', paddingHorizontal: 20, paddingBottom: 10 },
-  darkRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 20,
-    paddingTop: 14,
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
+  version: { fontSize: 12, fontFamily: 'Nunito_600SemiBold', paddingHorizontal: 24, paddingBottom: 10 },
+  footer: { paddingTop: 8 },
 });

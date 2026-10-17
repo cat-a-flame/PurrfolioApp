@@ -150,6 +150,9 @@ export default function RootLayout() {
             <Stack.Screen name="settings/account" options={{ headerShown: false }} />
             <Stack.Screen name="settings/two-factor" options={{ headerShown: false }} />
             <Stack.Screen name="settings/export" options={{ headerShown: false }} />
+            <Stack.Screen name="settings/help" options={{ headerShown: false }} />
+            <Stack.Screen name="settings/feedback" options={{ headerShown: false }} />
+            <Stack.Screen name="settings/about" options={{ headerShown: false }} />
           </Stack>
         </BaseCurrencyContext.Provider>
       </SafeAreaProvider>

@@ -312,7 +312,7 @@ export default function EditTransactionScreen() {
               <View style={{ flex: 1 }}>
                 <TouchableOpacity style={[styles.pickerBtn, { borderColor: errors.date ? colors.danger : colors.border, backgroundColor: colors.surface }]} onPress={() => setShowDatePicker(true)}>
                   <Ionicons name="calendar" size={15} color={colors.muted} style={{ marginRight: 6 }} />
-                  <Text style={[styles.pickerBtnText, { color: form.date ? colors.text : colors.muted }]} numberOfLines={1}>
+                  <Text style={[styles.pickerBtnText, { color: form.date ? colors.text : colors.muted }]}>
                     {form.date || 'Select date…'}
                   </Text>
                 </TouchableOpacity>
@@ -320,7 +320,7 @@ export default function EditTransactionScreen() {
               </View>
               <View style={{ flex: 1 }}>
                 <TouchableOpacity style={[styles.pickerBtn, { borderColor: errors.wallet ? colors.danger : colors.border, backgroundColor: colors.surface }]} onPress={() => setShowWalletModal(true)}>
-                  <Text style={[styles.pickerBtnText, { color: selectedWallet ? colors.text : colors.muted }]} numberOfLines={1} ellipsizeMode="tail">
+                  <Text style={[styles.pickerBtnText, { color: selectedWallet ? colors.text : colors.muted }]}>
                     {selectedWallet ? `${selectedWallet.icon ?? ''}${selectedWallet.icon ? ' ' : ''}${selectedWallet.name}` : 'Select wallet…'}
                   </Text>
                 </TouchableOpacity>
@@ -389,7 +389,7 @@ export default function EditTransactionScreen() {
 
             {/* Category — full width */}
             <TouchableOpacity style={[styles.pickerBtn, { borderColor: errors.category ? colors.danger : colors.border, backgroundColor: colors.surface }]} onPress={() => setShowCategoryModal(true)}>
-              <Text style={[styles.pickerBtnText, { color: selectedCategory ? colors.text : colors.muted }]} numberOfLines={1} ellipsizeMode="tail">
+              <Text style={[styles.pickerBtnText, { color: selectedCategory ? colors.text : colors.muted }]}>
                 {selectedCategory ? `${selectedCategory.icon ?? ''}${selectedCategory.icon ? ' ' : ''}${selectedCategory.name}` : 'Add category'}
               </Text>
               <Ionicons name="chevron-forward" size={18} color={colors.muted} />
@@ -401,7 +401,7 @@ export default function EditTransactionScreen() {
               <View style={{ flex: 1 }}>
                 <TouchableOpacity style={[styles.pickerBtn, { borderColor: errors.date ? colors.danger : colors.border, backgroundColor: colors.surface }]} onPress={() => setShowDatePicker(true)}>
                   <Ionicons name="calendar" size={15} color={colors.muted} style={{ marginRight: 6 }} />
-                  <Text style={[styles.pickerBtnText, { color: form.date ? colors.text : colors.muted }]} numberOfLines={1}>
+                  <Text style={[styles.pickerBtnText, { color: form.date ? colors.text : colors.muted }]}>
                     {form.date || 'Select date…'}
                   </Text>
                 </TouchableOpacity>
@@ -409,7 +409,7 @@ export default function EditTransactionScreen() {
               </View>
               <View style={{ flex: 1 }}>
                 <TouchableOpacity style={[styles.pickerBtn, { borderColor: errors.wallet ? colors.danger : colors.border, backgroundColor: colors.surface }]} onPress={() => setShowWalletModal(true)}>
-                  <Text style={[styles.pickerBtnText, { color: selectedWallet ? colors.text : colors.muted }]} numberOfLines={1} ellipsizeMode="tail">
+                  <Text style={[styles.pickerBtnText, { color: selectedWallet ? colors.text : colors.muted }]}>
                     {selectedWallet ? `${selectedWallet.icon ?? ''}${selectedWallet.icon ? ' ' : ''}${selectedWallet.name}` : 'Select wallet…'}
                   </Text>
                 </TouchableOpacity>

@@ -59,7 +59,7 @@ export default function TransactionRow({ transaction: tx, onPress }: Props) {
         ) : null}
 
         {tx.notes ? (
-          <Text style={[styles.sub, { color: colors.muted }]} numberOfLines={1}>
+          <Text style={[styles.sub, { color: colors.muted }]}>
             {tx.notes}
           </Text>
         ) : null}
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
   },
   walletRow: {
+    flexShrink: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   sub: {
+    flexShrink: 1,
     fontFamily: 'Nunito_400Regular', fontSize: 13,
   },
   labels: {
@@ -142,6 +144,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_500Medium',
   },
   amountCol: {
+    flexShrink: 0,
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
     paddingTop: 10,

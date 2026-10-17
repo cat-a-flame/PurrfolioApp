@@ -8,6 +8,12 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import BottomModal from '@/components/BottomModal';
+import Avatar from '@/components/Avatar';
+import { ListCard, ListRow, SectionLabel } from '@/components/SettingsList';
+import { useProfile } from '@/lib/profile';
 import ConfirmModal from '@/components/ConfirmModal';
 import DeleteAccountModal from '@/components/DeleteAccountModal';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,15 +27,20 @@ import AppHeader from '@/components/AppHeader';
 import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
 
+type EditTarget = 'name' | 'email' | 'password' | null;
+
 export default function AccountScreen() {
   const colors = useTheme();
   const router = useRouter();
   const { setBaseCurrency } = useBaseCurrencyState();
 
+  const profile = useProfile();
+  const [editing, setEditing] = useState<EditTarget>(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [savingUsername, setSavingUsername] = useState(false);
   const [savingEmail, setSavingEmail] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -40,12 +51,66 @@ export default function AccountScreen() {
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
 
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUsername(user?.user_metadata?.name ?? user?.user_metadata?.full_name ?? '');
-      setEmail(user?.email ?? '');
+  function openEdit(target: Exclude<EditTarget, null>) {
+    setUsername(profile.name ?? '');
+    setEmail(profile.email ?? '');
+    setPasswordError('');
+    setEditing(target);
+  }
+
+  function closeEdit() { setEditing(null); }
+
+  async function uploadAvatar(uri: string) {
+    setUploadingPhoto(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not signed in.');
+      const path = `${user.id}/avatar.jpg`;
+      const body = await (await fetch(uri)).arrayBuffer();
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(path, body, { contentType: 'image/jpeg', upsert: true });
+      if (uploadError) throw uploadError;
+      const { data } = supabase.storage.from('avatars').getPublicUrl(path);
+      // The path never changes, so a version query keeps the old photo from being served from cache.
+      const { error } = await supabase.auth.updateUser({ data: { avatar_url: `${data.publicUrl}?v=${Date.now()}` } });
+      if (error) throw error;
+      Events.emit('profile-updated');
+    } catch (e: any) {
+      Alert.alert('Error', e?.message ?? 'Could not update your photo.');
+    } finally {
+      setUploadingPhoto(false);
+    }
+  }
+
+  async function pickPhoto() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.6,
     });
-  }, []);
+    if (!result.canceled && result.assets[0]) await uploadAvatar(result.assets[0].uri);
+  }
+
+  async function removePhoto() {
+    setUploadingPhoto(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) await supabase.storage.from('avatars').remove([`${user.id}/avatar.jpg`]);
+    const { error } = await supabase.auth.updateUser({ data: { avatar_url: null } });
+    setUploadingPhoto(false);
+    if (error) Alert.alert('Error', error.message);
+    else Events.emit('profile-updated');
+  }
+
+  function handlePhotoPress() {
+    if (uploadingPhoto) return;
+    Alert.alert('Profile photo', undefined, [
+      { text: 'Choose from library', onPress: pickPhoto },
+      ...(profile.avatarUrl ? [{ text: 'Remove photo', style: 'destructive' as const, onPress: removePhoto }] : []),
+      { text: 'Cancel', style: 'cancel' as const },
+    ]);
+  }
 
   async function handleSaveUsername() {
     if (!username.trim()) {
@@ -58,7 +123,8 @@ export default function AccountScreen() {
     if (error) {
       Alert.alert('Error', error.message);
     } else {
-      Alert.alert('Saved', 'Username updated.');
+      Events.emit('profile-updated');
+      closeEdit();
     }
   }
 
@@ -70,6 +136,7 @@ export default function AccountScreen() {
     if (error) {
       Alert.alert('Error', error.message);
     } else {
+      closeEdit();
       Alert.alert('Check your inbox', 'A confirmation link has been sent to your new email address.');
     }
   }
@@ -105,6 +172,7 @@ export default function AccountScreen() {
     setCurrentPassword('');
     setNewPassword('');
     setConfirmPassword('');
+    closeEdit();
     Alert.alert('Saved', 'Password updated.');
   }
 
@@ -156,157 +224,139 @@ export default function AccountScreen() {
     router.replace('/(auth)/login');
   }
 
+  const saveLabel = (busy: boolean, label: string, onPress: () => void) =>
+    busy ? (
+      <ActivityIndicator color={colors.accent} style={{ alignSelf: 'flex-end' }} />
+    ) : (
+      <AppButton onPress={onPress}>{label}</AppButton>
+    );
+
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <AppHeader title="Account" showBack />
+      <AppHeader title="Profile" showBack />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
 
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.muted }]}>PROFILE</Text>
-          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <AppInput
-              label="Username"
-              value={username}
-              onChangeText={setUsername}
-              placeholder="Enter a username"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-            {savingUsername ? (
-              <ActivityIndicator color={colors.accent} style={{ alignSelf: 'flex-end' }} />
-            ) : (
-              <TouchableOpacity
-                onPress={handleSaveUsername}
-                activeOpacity={0.7}
-                style={[styles.saveButton, { borderColor: colors.accent }]}
-              >
-                <Text style={[styles.saveButtonText, { color: colors.accent }]}>Save</Text>
-              </TouchableOpacity>
-            )}
+        <View style={styles.hero}>
+          <View>
+            <Avatar size={88} uri={profile.avatarUrl} label={profile.name || profile.email} />
+            <TouchableOpacity
+              onPress={handlePhotoPress}
+              activeOpacity={0.7}
+              accessibilityLabel="Change photo"
+              style={[styles.photoBtn, { backgroundColor: colors.accent, borderColor: colors.bg }]}
+            >
+              {uploadingPhoto ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Ionicons name="camera-outline" size={18} color="#fff" />
+              )}
+            </TouchableOpacity>
           </View>
+          <Text style={[styles.heroName, { color: colors.heading }]}>{profile.name || 'My Account'}</Text>
         </View>
 
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.muted }]}>EMAIL</Text>
-          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <AppInput
-              label="Email address"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
+        <View>
+          <SectionLabel>Personal details</SectionLabel>
+          <ListCard>
+            <ListRow eyebrow="Display name" label={profile.name || 'Not set'} onPress={() => openEdit('name')} />
+            <ListRow eyebrow="Email" label={profile.email ?? ''} onPress={() => openEdit('email')} />
+            <ListRow
+              eyebrow="Password"
+              label="••••••••"
+              onPress={() => openEdit('password')}
+              trailing={<Text style={[styles.changeText, { color: colors.accent }]}>Change</Text>}
             />
-            <Text style={[styles.hint, { color: colors.muted }]}>
-              A confirmation link will be sent to verify the new address.
-            </Text>
-            {savingEmail ? (
-              <ActivityIndicator color={colors.accent} style={{ alignSelf: 'flex-end' }} />
-            ) : (
-              <TouchableOpacity
-                onPress={handleSaveEmail}
-                activeOpacity={0.7}
-                style={[styles.saveButton, { borderColor: colors.accent }]}
-              >
-                <Text style={[styles.saveButtonText, { color: colors.accent }]}>Save</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+          </ListCard>
         </View>
 
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.muted }]}>CHANGE PASSWORD</Text>
-          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <AppInput
-              label="Current password"
-              value={currentPassword}
-              onChangeText={setCurrentPassword}
-              secureTextEntry
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="current-password"
-            />
-            <AppInput
-              label="New password"
-              value={newPassword}
-              onChangeText={setNewPassword}
-              secureTextEntry
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="new-password"
-            />
-            <AppInput
-              label="Confirm new password"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              secureTextEntry
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="new-password"
-              error={passwordError || undefined}
-            />
-            {savingPassword ? (
-              <ActivityIndicator color={colors.accent} style={{ alignSelf: 'flex-end' }} />
-            ) : (
-              <TouchableOpacity
-                onPress={handleChangePassword}
-                activeOpacity={0.7}
-                style={[styles.saveButton, { borderColor: colors.accent }]}
-              >
-                <Text style={[styles.saveButtonText, { color: colors.accent }]}>Update password</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
+        <ListCard>
+          <ListRow label="Sign out" icon="log-out-outline" onPress={handleSignOut} trailing={null} />
+        </ListCard>
 
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.muted }]}>SESSION</Text>
-          <TouchableOpacity
-            style={[styles.signOutButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
-            onPress={handleSignOut}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.signOutText, { color: colors.danger }]}>Sign out</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.danger }]}>DANGER ZONE</Text>
-          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.dangerLight }]}>
-            <View style={styles.dangerRow}>
-              <Text style={[styles.dangerRowTitle, { color: colors.text }]}>Delete all data</Text>
-              <Text style={[styles.hint, styles.dangerHint, { color: colors.muted }]}>
-                Permanently removes all your transactions, recurring payments, templates, accounts,
-                categories and labels. Your login stays, so you can start fresh.
-              </Text>
-              <TouchableOpacity
-                style={[styles.dangerButton, { backgroundColor: colors.dangerLight, borderColor: colors.dangerLight }]}
-                onPress={() => openDelete('data')}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.signOutText, { color: colors.danger }]}>Delete all data</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={[styles.dangerDivider, { backgroundColor: colors.border }]} />
-            <View style={styles.dangerRow}>
-              <Text style={[styles.dangerRowTitle, { color: colors.text }]}>Delete account</Text>
-              <Text style={[styles.hint, styles.dangerHint, { color: colors.muted }]}>
-                Permanently deletes your account and all of its data. You will be signed out and
-                will not be able to log in again with this account.
-              </Text>
-              <TouchableOpacity
-                style={[styles.dangerButton, { backgroundColor: colors.dangerLight, borderColor: colors.dangerLight }]}
-                onPress={() => openDelete('account')}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.signOutText, { color: colors.danger }]}>Delete account</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+        <View>
+          <SectionLabel danger>Danger zone</SectionLabel>
+          <ListCard danger>
+            <ListRow
+              danger
+              icon="trash-outline"
+              label="Delete expense data"
+              caption="Clears your accounts, transactions, categories and labels. You stay signed in."
+              onPress={() => openDelete('data')}
+              trailing={null}
+            />
+            <ListRow
+              danger
+              icon="person-remove-outline"
+              label="Delete account"
+              caption="Removes your account and all expense data. This can't be undone."
+              onPress={() => openDelete('account')}
+              trailing={null}
+            />
+          </ListCard>
         </View>
 
       </ScrollView>
+
+      <BottomModal visible={editing === 'name'} onClose={closeEdit} title="Display name">
+        <AppInput
+          label="Username"
+          value={username}
+          onChangeText={setUsername}
+          placeholder="Enter a username"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        {saveLabel(savingUsername, 'Save', handleSaveUsername)}
+      </BottomModal>
+
+      <BottomModal visible={editing === 'email'} onClose={closeEdit} title="Email">
+        <AppInput
+          label="Email address"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Enter your email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        <Text style={[styles.hint, { color: colors.muted }]}>
+          A confirmation link will be sent to verify the new address.
+        </Text>
+        {saveLabel(savingEmail, 'Save', handleSaveEmail)}
+      </BottomModal>
+
+      <BottomModal visible={editing === 'password'} onClose={closeEdit} title="Change password">
+        <AppInput
+          label="Current password"
+          value={currentPassword}
+          onChangeText={setCurrentPassword}
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoComplete="current-password"
+        />
+        <AppInput
+          label="New password"
+          value={newPassword}
+          onChangeText={setNewPassword}
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoComplete="new-password"
+        />
+        <AppInput
+          label="Confirm new password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoComplete="new-password"
+          error={passwordError || undefined}
+        />
+        {saveLabel(savingPassword, 'Update password', handleChangePassword)}
+      </BottomModal>
+
       <ConfirmModal
         visible={!!confirmAction}
         title="Sign out"
@@ -335,58 +385,20 @@ export default function AccountScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  container: { paddingHorizontal: 16, paddingBottom: 40, gap: 24 },
-  section: { gap: 8 },
-  sectionTitle: {
-    fontSize: 13,
-    fontFamily: 'Nunito_600SemiBold',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    paddingHorizontal: 4,
-  },
-  card: {
-    borderRadius: 26,
-    borderWidth: 1,
-    padding: 16,
-    gap: 12,
-  },
-  hint: {
-    fontSize: 12,
-    fontFamily: 'Nunito_400Regular',
-    marginTop: -4,
-  },
-  dangerHint: {
-    marginTop: 0,
-    lineHeight: 17,
-  },
-  dangerRow: { gap: 8 },
-  dangerRowTitle: { fontSize: 16, fontFamily: 'Nunito_700Bold' },
-  dangerDivider: { height: 1 },
-  dangerButton: {
-    borderRadius: 14,
-    borderWidth: 1,
-    paddingVertical: 12,
+  container: { paddingHorizontal: 16, paddingBottom: 40, gap: 20 },
+  hero: { alignItems: 'center', gap: 10, paddingVertical: 8 },
+  heroName: { fontSize: 20, fontFamily: 'Lora_700Bold', letterSpacing: -0.3 },
+  photoBtn: {
+    position: 'absolute',
+    right: -4,
+    bottom: -4,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 3,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  saveButton: {
-    alignSelf: 'flex-end',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 7,
-  },
-  saveButtonText: {
-    fontSize: 14,
-    fontFamily: 'Nunito_600SemiBold',
-  },
-  signOutButton: {
-    borderRadius: 14,
-    borderWidth: 1,
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  signOutText: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
-  },
+  changeText: { fontSize: 14, fontFamily: 'Nunito_700Bold' },
+  hint: { fontSize: 12, fontFamily: 'Nunito_400Regular' },
 });
