@@ -1080,7 +1080,7 @@ export default function TransactionsScreen() {
               {/* Footer */}
               <View style={[styles.panelFooter, { borderTopColor: colors.border }]}>
                 <TouchableOpacity
-                  onPress={resetPanelFilters}
+                  onPress={() => { resetPanelFilters(); closeFilterPanel(); }}
                   style={[styles.resetAllBtn, { borderColor: colors.border }]}
                 >
                   <Text style={[styles.resetAllText, { color: colors.muted }]}>Reset all</Text>

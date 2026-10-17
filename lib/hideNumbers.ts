@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STORAGE_KEY = '@purrfolio/hide_numbers';
 
-export const NUMBER_MASK = '★★★★';
+export const NUMBER_MASK = '****';
 
 let hidden = false;
 let loaded = false;
