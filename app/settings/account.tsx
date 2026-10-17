@@ -209,8 +209,23 @@ export default function AccountScreen() {
       return;
     }
 
+    // The photo lives in Storage, which the database function can't clean up, and removing it needs
+    // the signed-in session. So it goes first, and a failure stops the deletion rather than orphaning it.
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { error: photoError } = await supabase.storage.from('avatars').remove([`${user.id}/avatar.jpg`]);
+      if (photoError) {
+        setDeleting(false);
+        setDeleteError(photoError.message);
+        return;
+      }
+    }
+
     const { error } = await supabase.rpc('delete_my_account');
     if (error) {
+      // The account survived, so don't leave it pointing at the photo that was just removed.
+      await supabase.auth.updateUser({ data: { avatar_url: null } });
+      Events.emit('profile-updated');
       setDeleting(false);
       setDeleteError(error.message);
       return;
