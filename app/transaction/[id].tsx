@@ -78,6 +78,7 @@ export default function EditTransactionScreen() {
     date: form.date,
   });
   const [isTransfer, setIsTransfer] = useState(false);
+  const [transferGroupId, setTransferGroupId] = useState<string | null>(null);
 
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showLabelModal, setShowLabelModal] = useState(false);
@@ -107,6 +108,7 @@ export default function EditTransactionScreen() {
 
       if (tx) {
         setIsTransfer(!!tx.transfer_group_id);
+        setTransferGroupId(tx.transfer_group_id ?? null);
         const loaded: Form = {
           type: tx.type,
           amount: String(tx.amount),
@@ -234,8 +236,17 @@ export default function EditTransactionScreen() {
 
   function handleDelete() {
     setConfirmAction(() => async () => {
-      await supabase.from('transaction_labels').delete().eq('transaction_id', id);
-      const { error: txErr } = await supabase.from('transactions').delete().eq('id', id);
+      // A transfer between Purrfolio accounts is stored as two linked records; delete both.
+      let ids: string[] = [id as string];
+      if (transferGroupId) {
+        const { data: group } = await supabase
+          .from('transactions')
+          .select('id')
+          .eq('transfer_group_id', transferGroupId);
+        ids = Array.from(new Set([...ids, ...(group ?? []).map((t: any) => t.id)]));
+      }
+      await supabase.from('transaction_labels').delete().in('transaction_id', ids);
+      const { error: txErr } = await supabase.from('transactions').delete().in('id', ids);
       Events.emit('transaction-saved', {
         success: !txErr,
         message: txErr ? (txErr.message ?? 'Failed to delete.') : 'Record deleted.',
