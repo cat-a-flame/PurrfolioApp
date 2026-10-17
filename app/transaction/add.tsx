@@ -421,7 +421,7 @@ export default function AddTransactionScreen() {
                   style={[styles.pickerBtn, { borderColor: errors.wallet ? colors.danger : colors.border, backgroundColor: colors.surface }]}
                   onPress={() => setShowWalletModal(true)}
                 >
-                  <Text style={[styles.pickerBtnText, { color: selectedWallet ? colors.text : colors.muted }]} numberOfLines={1}>
+                  <Text style={[styles.pickerBtnText, { color: selectedWallet ? colors.text : colors.muted }]}>
                     {selectedWallet ? `${selectedWallet.icon ?? ''}${selectedWallet.icon ? ' ' : ''}${selectedWallet.name}` : 'Select…'}
                   </Text>
                   <Ionicons name="chevron-forward" size={16} color={colors.muted} />
@@ -434,7 +434,7 @@ export default function AddTransactionScreen() {
                   style={[styles.pickerBtn, { borderColor: errors.to_wallet ? colors.danger : colors.border, backgroundColor: colors.surface }]}
                   onPress={() => setShowToWalletModal(true)}
                 >
-                  <Text style={[styles.pickerBtnText, { color: selectedToWallet ? colors.text : colors.muted }]} numberOfLines={1}>
+                  <Text style={[styles.pickerBtnText, { color: selectedToWallet ? colors.text : colors.muted }]}>
                     {selectedToWallet ? `${selectedToWallet.icon ?? ''}${selectedToWallet.icon ? ' ' : ''}${selectedToWallet.name}` : 'Select…'}
                   </Text>
                   <Ionicons name="chevron-forward" size={16} color={colors.muted} />
@@ -493,7 +493,7 @@ export default function AddTransactionScreen() {
 
             {/* Category — full width */}
             <TouchableOpacity style={[styles.pickerBtn, { borderColor: errors.category ? colors.danger : colors.border, backgroundColor: colors.surface }]} onPress={() => setShowCategoryModal(true)}>
-              <Text style={[styles.pickerBtnText, { color: selectedCategory ? colors.text : colors.muted }]} numberOfLines={1} ellipsizeMode="tail">
+              <Text style={[styles.pickerBtnText, { color: selectedCategory ? colors.text : colors.muted }]}>
                 {selectedCategory ? `${selectedCategory.icon ?? ''}${selectedCategory.icon ? ' ' : ''}${selectedCategory.name}` : 'Add category'}
               </Text>
               <Ionicons name="chevron-forward" size={18} color={colors.muted} />
@@ -505,13 +505,13 @@ export default function AddTransactionScreen() {
               <View style={{ flex: 1 }}>
                 <TouchableOpacity style={[styles.pickerBtn, { borderColor: errors.date ? colors.danger : colors.border, backgroundColor: colors.surface }]} onPress={() => setShowDatePicker(true)}>
                   <Ionicons name="calendar" size={15} color={colors.muted} style={{ marginRight: 6 }} />
-                  <Text style={[styles.pickerBtnText, { color: colors.text }]} numberOfLines={1}>{dateLabel}</Text>
+                  <Text style={[styles.pickerBtnText, { color: colors.text }]}>{dateLabel}</Text>
                 </TouchableOpacity>
                 <FieldError message={errors.date} />
               </View>
               <View style={{ flex: 1 }}>
                 <TouchableOpacity style={[styles.pickerBtn, { borderColor: errors.wallet ? colors.danger : colors.border, backgroundColor: colors.surface }]} onPress={() => setShowWalletModal(true)}>
-                  <Text style={[styles.pickerBtnText, { color: selectedWallet ? colors.text : colors.muted }]} numberOfLines={1} ellipsizeMode="tail">
+                  <Text style={[styles.pickerBtnText, { color: selectedWallet ? colors.text : colors.muted }]}>
                     {selectedWallet ? `${selectedWallet.icon ?? ''}${selectedWallet.icon ? ' ' : ''}${selectedWallet.name}` : 'Select wallet…'}
                   </Text>
                 </TouchableOpacity>

@@ -126,11 +126,11 @@ export default function AppHeader({ title, rightAction, showBack, onBack }: Prop
                 >
                   <Avatar size={44} uri={avatarUrl} label={username || email} />
                   <View style={{ flex: 1 }}>
-                    <Text style={[styles.userName, { color: colors.text }]} numberOfLines={1}>
+                    <Text style={[styles.userName, { color: colors.text }]}>
                       {username || 'My Account'}
                     </Text>
                     {email ? (
-                      <Text style={[styles.userEmail, { color: colors.muted }]} numberOfLines={1}>{email}</Text>
+                      <Text style={[styles.userEmail, { color: colors.muted }]}>{email}</Text>
                     ) : null}
                   </View>
                   <Ionicons name="chevron-forward" size={18} color={colors.muted} />
@@ -244,8 +244,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
   },
-  userName: { fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
-  userEmail: { fontSize: 12, fontFamily: 'Nunito_400Regular', marginTop: 2 },
+  userName: { flexShrink: 1, fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
+  userEmail: { flexShrink: 1, fontSize: 12, fontFamily: 'Nunito_400Regular', marginTop: 2 },
 
   sectionLabel: {
     fontSize: 12,

@@ -32,7 +32,7 @@ export default function DuePaymentDialog({ due, onPay, onSkip, onClose }: Props)
           <Pressable
             style={[styles.sheet, { backgroundColor: colors.surface, borderColor: colors.glassBorder, shadowColor: colors.shadow }]}
           >
-            <Text style={[styles.title, { color: colors.text }]} numberOfLines={2}>{payment.name}</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{payment.name}</Text>
             <Text style={[styles.date, { color: colors.muted }]}>
               {due.dueDate.toLocaleDateString('default', { month: 'long', day: 'numeric', year: 'numeric' })}
             </Text>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     shadowRadius: 40,
     elevation: 16,
   },
-  title: { fontSize: 20, fontFamily: 'Lora_700Bold', letterSpacing: -0.3, textAlign: 'center' },
+  title: { flexShrink: 1, fontSize: 20, fontFamily: 'Lora_700Bold', letterSpacing: -0.3, textAlign: 'center' },
   date: { fontSize: 13, fontFamily: 'Nunito_500Medium', textAlign: 'center' },
   amount: { fontSize: 28, fontFamily: 'Lora_700Bold', textAlign: 'center', marginBottom: 8 },
   row: { flexDirection: 'row', gap: 12 },

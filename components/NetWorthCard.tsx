@@ -87,7 +87,7 @@ export default function NetWorthCard({ summaries, rates, loading }: Props) {
     <View style={cardStyle} accessibilityLabel="Accounts">
       <View style={styles.header}>
         <Text style={[styles.headerLabel, { color: colors.muted }]}>Net worth</Text>
-        <Text style={[styles.headerValue, { color: colors.text }]} numberOfLines={1}>
+        <Text style={[styles.headerValue, { color: colors.text }]}>
           {money(formatBase(netWorth), netApproximate)}
         </Text>
       </View>
@@ -105,14 +105,14 @@ export default function NetWorthCard({ summaries, rates, loading }: Props) {
           <View style={[styles.groupHeader, { borderBottomColor: colors.border2 }]}>
             <View style={styles.groupTitleWrap}>
               <View style={[styles.dot, { backgroundColor: groupColors[g.key] }]} />
-              <Text style={[styles.groupTitle, { color: colors.text }]} numberOfLines={1}>{g.label}</Text>
+              <Text style={[styles.groupTitle, { color: colors.text }]}>{g.label}</Text>
             </View>
             <Text style={[styles.groupTotal, { color: colors.text }]}>{money(formatBase(g.total), g.approximate)}</Text>
           </View>
           {g.items.map(({ wallet, balance }) => (
             <View key={wallet.id} style={styles.row}>
               <EmojiTile emoji={wallet.icon || '💰'} color={wallet.color} />
-              <Text style={[styles.name, { color: colors.text }]} numberOfLines={1}>{wallet.name}</Text>
+              <Text style={[styles.name, { color: colors.text }]}>{wallet.name}</Text>
               <Text style={[styles.amount, { color: colors.text }]}>{formatCurrency(balance, wallet.currency)}</Text>
             </View>
           ))}
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   header: { flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', gap: 10 },
   headerLabel: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
-  headerValue: { fontSize: 16, fontFamily: 'Nunito_900Black', letterSpacing: -0.2 },
+  headerValue: { flexShrink: 1, fontSize: 16, fontFamily: 'Nunito_900Black', letterSpacing: -0.2 },
   bar: { flexDirection: 'row', gap: 4, height: 6 },
   segment: { flexBasis: 0, minWidth: 6, borderRadius: 3 },
   group: { gap: 12, borderWidth: 1, borderRadius: 18, paddingVertical: 12, paddingHorizontal: 16 },

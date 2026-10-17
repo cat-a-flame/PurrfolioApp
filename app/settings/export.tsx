@@ -120,7 +120,7 @@ export default function ExportScreen() {
           onPress={() => setPicker(which)}
           activeOpacity={0.7}
         >
-          <Text style={[styles.pickerBtnText, { color: value ? colors.text : colors.muted }]} numberOfLines={1}>
+          <Text style={[styles.pickerBtnText, { color: value ? colors.text : colors.muted }]}>
             {value || placeholder}
           </Text>
           <Ionicons name="calendar" size={16} color={colors.muted} />
@@ -240,6 +240,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   pickerBtnText: {
+    flexShrink: 1,
     flex: 1,
     fontSize: 15,
     fontFamily: 'Nunito_400Regular',

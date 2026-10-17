@@ -851,7 +851,7 @@ export default function TransactionsScreen() {
                         <Ionicons name="swap-vertical-outline" size={16} color={colors.accent} />
                       </View>
                       <Text style={[styles.panelRowLabel, { color: colors.text }]}>Type</Text>
-                      <Text style={[styles.panelRowValue, { color: colors.muted }]} numberOfLines={1}>{typeSummary()}</Text>
+                      <Text style={[styles.panelRowValue, { color: colors.muted }]}>{typeSummary()}</Text>
                       <Ionicons name="chevron-forward" size={16} color={colors.muted} />
                     </TouchableOpacity>
 
@@ -865,7 +865,7 @@ export default function TransactionsScreen() {
                         <Ionicons name="wallet-outline" size={16} color={colors.accent} />
                       </View>
                       <Text style={[styles.panelRowLabel, { color: colors.text }]}>Account</Text>
-                      <Text style={[styles.panelRowValue, { color: colors.muted }]} numberOfLines={1}>{accountSummary()}</Text>
+                      <Text style={[styles.panelRowValue, { color: colors.muted }]}>{accountSummary()}</Text>
                       <Ionicons name="chevron-forward" size={16} color={colors.muted} />
                     </TouchableOpacity>
 
@@ -879,7 +879,7 @@ export default function TransactionsScreen() {
                         <Ionicons name="grid-outline" size={16} color={colors.accent} />
                       </View>
                       <Text style={[styles.panelRowLabel, { color: colors.text }]}>Category</Text>
-                      <Text style={[styles.panelRowValue, { color: colors.muted }]} numberOfLines={1}>{categorySummary()}</Text>
+                      <Text style={[styles.panelRowValue, { color: colors.muted }]}>{categorySummary()}</Text>
                       <Ionicons name="chevron-forward" size={16} color={colors.muted} />
                     </TouchableOpacity>
 
@@ -893,7 +893,7 @@ export default function TransactionsScreen() {
                         <Ionicons name="pricetag-outline" size={16} color={colors.accent} />
                       </View>
                       <Text style={[styles.panelRowLabel, { color: colors.text }]}>Label</Text>
-                      <Text style={[styles.panelRowValue, { color: colors.muted }]} numberOfLines={1}>{labelSummary()}</Text>
+                      <Text style={[styles.panelRowValue, { color: colors.muted }]}>{labelSummary()}</Text>
                       <Ionicons name="chevron-forward" size={16} color={colors.muted} />
                     </TouchableOpacity>
 
@@ -907,7 +907,7 @@ export default function TransactionsScreen() {
                         <Ionicons name="cash-outline" size={16} color={colors.accent} />
                       </View>
                       <Text style={[styles.panelRowLabel, { color: colors.text }]}>Currency</Text>
-                      <Text style={[styles.panelRowValue, { color: colors.muted }]} numberOfLines={1}>{currencySummary()}</Text>
+                      <Text style={[styles.panelRowValue, { color: colors.muted }]}>{currencySummary()}</Text>
                       <Ionicons name="chevron-forward" size={16} color={colors.muted} />
                     </TouchableOpacity>
                   </>
@@ -1210,7 +1210,7 @@ const styles = StyleSheet.create({
   },
   panelRowIcon: { width: 30, height: 30, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
   panelRowLabel: { flex: 1, fontSize: 15, fontFamily: 'Nunito_500Medium' },
-  panelRowValue: { fontFamily: 'Nunito_400Regular', fontSize: 14, maxWidth: 110 },
+  panelRowValue: { flexShrink: 1, fontFamily: 'Nunito_400Regular', fontSize: 14, maxWidth: 110 },
 
   optionRow: {
     flexDirection: 'row',

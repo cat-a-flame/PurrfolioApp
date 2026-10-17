@@ -101,7 +101,7 @@ export default function CategoriesScreen() {
                 <Text style={styles.iconEmoji}>{item.icon || '📁'}</Text>
               </View>
               <View style={styles.info}>
-                <Text style={[styles.name, { color: colors.text }]} numberOfLines={1}>{item.name}</Text>
+                <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
                 <Text style={[styles.subLabel, { color: colors.muted }]}>
                   {item.children.length ? `${item.children.length} subcategories` : 'No subcategories'}
                 </Text>
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   iconEmoji: { fontFamily: 'Nunito_400Regular', fontSize: 24 },
   info: { flex: 1, gap: 2 },
-  name: { fontSize: 16, fontFamily: 'Nunito_700Bold' },
+  name: { flexShrink: 1, fontSize: 16, fontFamily: 'Nunito_700Bold' },
   subLabel: { fontSize: 12, fontFamily: 'Nunito_600SemiBold' },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 6, padding: 32 },
   emptyIcon: { fontFamily: 'Nunito_400Regular', fontSize: 32, marginBottom: 4 },
