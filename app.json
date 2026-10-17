@@ -2,7 +2,7 @@
   "expo": {
     "name": "Purrfolio",
     "slug": "purrfolio",
-    "version": "1.2.6",
+    "version": "1.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -31,6 +31,12 @@
       "expo-router",
       "expo-font",
       "expo-local-authentication",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Purrfolio needs access to your photos so you can choose a profile picture."
+        }
+      ],
       [
         "./plugins/withAdiRegistration",
         {
