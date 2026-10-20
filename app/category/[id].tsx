@@ -11,7 +11,7 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { supabase } from '@/lib/supabase';
-import { useTheme } from '@/lib/theme';
+import { useTheme, radius } from '@/lib/theme';
 import { Ionicons } from '@expo/vector-icons';
 import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
@@ -200,9 +200,9 @@ export default function CategoryScreen() {
       </View>
 
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottom + 32 }]} keyboardShouldPersistTaps="handled">
           {/* Icon, name and summary */}
-          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View style={[styles.card, { backgroundColor: colors.glassStrong, borderColor: colors.glassBorder, shadowColor: colors.shadow }]}>
             <View style={styles.iconNameRow}>
               <View style={styles.iconCol}>
                 <Text style={[styles.fieldLabel, { color: colors.muted }]}>Icon</Text>
@@ -234,14 +234,14 @@ export default function CategoryScreen() {
 
           {/* Type */}
           <Text style={[styles.sectionLabel, { color: colors.muted }]}>Type</Text>
-          <View style={[styles.typeToggle, { backgroundColor: colors.surface2 }]}>
+          <View style={[styles.typeToggle, { backgroundColor: colors.surface }]}>
             {TYPES.map((t) => {
               const active = form.type === t.value;
-              const tint = active ? typeColor(t.value, colors) : colors.muted;
+              const tint = active ? '#fff' : colors.muted;
               return (
                 <TouchableOpacity
                   key={t.value}
-                  style={[styles.typeBtn, active && [styles.typeBtnActive, { backgroundColor: colors.surface }]]}
+                  style={[styles.typeBtn, active && { backgroundColor: typeColor(t.value, colors) }]}
                   onPress={() => setField('type', t.value)}
                   activeOpacity={0.8}
                 >
@@ -254,7 +254,7 @@ export default function CategoryScreen() {
 
           {/* Color */}
           <Text style={[styles.sectionLabel, { color: colors.muted }]}>Color</Text>
-          <View style={[styles.card, styles.colorCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View style={[styles.card, styles.colorCard, { backgroundColor: colors.glassStrong, borderColor: colors.glassBorder, shadowColor: colors.shadow }]}>
             {CATEGORY_COLORS.map((c) => {
               const selected = form.color.toLowerCase() === c.toLowerCase();
               return (
@@ -277,7 +277,7 @@ export default function CategoryScreen() {
             <Text style={[styles.sectionLabel, { color: colors.muted }]}>Subcategories</Text>
             <Text style={[styles.sectionCount, { color: colors.muted }]}>{subCount}</Text>
           </View>
-          <View style={[styles.card, styles.subsCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View style={[styles.card, styles.subsCard, { backgroundColor: colors.glassStrong, borderColor: colors.glassBorder, shadowColor: colors.shadow }]}>
             {form.subs.map((sub) => (
               <View key={sub._key} style={[styles.subRow, { borderBottomColor: colors.border2 }]}>
                 <TextInput
@@ -302,13 +302,11 @@ export default function CategoryScreen() {
               <Text style={[styles.addSubText, { color: colors.accent }]}>Add subcategory</Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>
-
-        <View style={[styles.footer, { borderTopColor: colors.border, backgroundColor: colors.bg, paddingBottom: bottom + 12 }]}>
-          <AppButton onPress={handleSave} loading={saving} fullWidth>
+          <AppButton onPress={handleSave} loading={saving} fullWidth style={{ marginTop: 8 }}>
             {isNew ? 'Add category' : 'Save changes'}
           </AppButton>
-        </View>
+        </ScrollView>
+
       </KeyboardAvoidingView>
 
       <ConfirmModal
@@ -333,16 +331,24 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
   },
-  headerTitle: { fontSize: 20, fontFamily: 'Lora_700Bold' },
+  headerTitle: { fontSize: 17, fontFamily: 'Lora_700Bold' },
   content: { padding: 16, paddingBottom: 24, gap: 10 },
-  card: { borderWidth: 1, borderRadius: 20, padding: 16 },
+  card: {
+    borderWidth: 1,
+    borderRadius: radius.xl,
+    padding: 16,
+    shadowOffset: { width: 0, height: 18 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
+    elevation: 3,
+  },
   iconNameRow: { flexDirection: 'row', gap: 12 },
   iconCol: { alignItems: 'center' },
   fieldLabel: { fontSize: 13, fontFamily: 'Nunito_700Bold', marginBottom: 6 },
   iconTile: {
     width: 64,
     height: 64,
-    borderRadius: 16,
+    borderRadius: radius.md,
     borderWidth: 1.5,
     borderStyle: 'dashed',
     textAlign: 'center',
@@ -362,31 +368,24 @@ const styles = StyleSheet.create({
   summaryText: { fontSize: 13, fontFamily: 'Nunito_600SemiBold' },
   sectionLabel: {
     marginTop: 14,
-    fontSize: 12,
-    fontFamily: 'Nunito_800ExtraBold',
-    letterSpacing: 1,
+    fontSize: 11,
+    fontFamily: 'Nunito_700Bold',
+    letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
   sectionHead: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
-  sectionCount: { fontSize: 12, fontFamily: 'Nunito_800ExtraBold' },
-  typeToggle: { flexDirection: 'row', borderRadius: 16, padding: 4, gap: 4 },
+  sectionCount: { fontSize: 11, fontFamily: 'Nunito_700Bold' },
+  typeToggle: { flexDirection: 'row', borderRadius: 12, overflow: 'hidden', padding: 4, gap: 4 },
   typeBtn: {
     flex: 1,
     flexDirection: 'row',
     gap: 6,
-    paddingVertical: 11,
+    paddingVertical: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
+    borderRadius: 8,
   },
-  typeBtnActive: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  typeBtnText: { fontSize: 14, fontFamily: 'Nunito_700Bold' },
+  typeBtnText: { fontSize: 14, fontFamily: 'Nunito_600SemiBold' },
   colorCard: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: 8, paddingVertical: 14 },
   swatchWrap: {
     width: 46,
@@ -410,7 +409,7 @@ const styles = StyleSheet.create({
   subIcon: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: radius.sm,
     textAlign: 'center',
     fontSize: 20,
     fontFamily: 'Nunito_400Regular',
@@ -425,5 +424,4 @@ const styles = StyleSheet.create({
     height: 52,
   },
   addSubText: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
-  footer: { paddingHorizontal: 16, paddingTop: 12, borderTopWidth: 1 },
 });
