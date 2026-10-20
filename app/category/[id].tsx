@@ -5,12 +5,13 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  TextInput,
   KeyboardAvoidingView,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { supabase } from '@/lib/supabase';
-import { useTheme } from '@/lib/theme';
+import { useTheme, radius } from '@/lib/theme';
 import { Ionicons } from '@expo/vector-icons';
 import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
@@ -35,6 +36,12 @@ const TYPES: { value: CatType; label: string }[] = [
   { value: 'income', label: 'Income' },
   { value: 'both', label: 'Both' },
 ];
+
+const TYPE_ICONS: Record<CatType, keyof typeof Ionicons.glyphMap> = {
+  expense: 'trending-down',
+  income: 'trending-up',
+  both: 'swap-vertical',
+};
 
 const CATEGORY_COLORS = [
   '#6C63FF', '#FF6B6B', '#43BCCD', '#F9A826', '#5CB85C',
@@ -170,6 +177,9 @@ export default function CategoryScreen() {
     return <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]} />;
   }
 
+  const subCount = form.subs.length;
+  const typeLabel = TYPES.find((t) => t.value === form.type)?.label ?? '';
+
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
       {/* Header */}
@@ -177,7 +187,7 @@ export default function CategoryScreen() {
         <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
           <Ionicons name="arrow-back" size={24} color={colors.accent} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>
+        <Text style={[styles.headerTitle, { color: colors.heading }]}>
           {isNew ? 'Add category' : 'Edit category'}
         </Text>
         {!isNew && !isDefault ? (
@@ -190,97 +200,113 @@ export default function CategoryScreen() {
       </View>
 
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-        <ScrollView
-          contentContainerStyle={[styles.content, { paddingBottom: bottom + 32 }]}
-          keyboardShouldPersistTaps="handled"
-        >
-          <View style={styles.iconNameRow}>
-            <AppInput
-              label="Icon"
-              value={form.icon}
-              onChangeText={(v) => setField('icon', firstEmoji(v))}
-              placeholder="🙂"
-              style={{ width: 72, textAlign: 'center' }}
-            />
-            <View style={{ flex: 1 }}>
-              <AppInput
-                label="Category name"
-                value={form.name}
-                onChangeText={(v) => setField('name', v)}
-                placeholder="e.g. Food & Dining"
-              />
+        <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottom + 32 }]} keyboardShouldPersistTaps="handled">
+          {/* Icon, name and summary */}
+          <View style={[styles.card, { backgroundColor: colors.glassStrong, borderColor: colors.glassBorder, shadowColor: colors.shadow }]}>
+            <View style={styles.iconNameRow}>
+              <View style={styles.iconCol}>
+                <Text style={[styles.fieldLabel, { color: colors.muted }]}>Icon</Text>
+                <TextInput
+                  value={form.icon}
+                  onChangeText={(v) => setField('icon', firstEmoji(v))}
+                  placeholder="🙂"
+                  placeholderTextColor={colors.placeholder}
+                  style={[styles.iconTile, { backgroundColor: form.color + '22', borderColor: form.color }]}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.fieldLabel, { color: colors.muted }]}>Category name</Text>
+                <AppInput
+                  value={form.name}
+                  onChangeText={(v) => setField('name', v)}
+                  placeholder="e.g. Food & Dining"
+                  style={{ height: 64 }}
+                />
+              </View>
+            </View>
+            <View style={[styles.summary, { borderTopColor: colors.border2 }]}>
+              <View style={[styles.summaryDot, { backgroundColor: form.color }]} />
+              <Text style={[styles.summaryText, { color: colors.muted }]}>
+                {typeLabel} · {subCount} {subCount === 1 ? 'subcategory' : 'subcategories'}
+              </Text>
             </View>
           </View>
 
-          <View style={styles.fieldGroup}>
-            <Text style={[styles.fieldLabel, { color: colors.muted }]}>Type</Text>
-            <View style={[styles.typeToggle, { backgroundColor: colors.surface }]}>
-              {TYPES.map((t) => (
+          {/* Type */}
+          <Text style={[styles.sectionLabel, { color: colors.muted }]}>Type</Text>
+          <View style={[styles.typeToggle, { backgroundColor: colors.surface }]}>
+            {TYPES.map((t) => {
+              const active = form.type === t.value;
+              const tint = active ? '#fff' : colors.muted;
+              return (
                 <TouchableOpacity
                   key={t.value}
-                  style={[styles.typeBtn, form.type === t.value && { backgroundColor: typeColor(t.value, colors) }]}
+                  style={[styles.typeBtn, active && { backgroundColor: typeColor(t.value, colors) }]}
                   onPress={() => setField('type', t.value)}
+                  activeOpacity={0.8}
                 >
-                  <Text style={[styles.typeBtnText, { color: form.type === t.value ? '#fff' : colors.muted }]}>
-                    {t.label}
-                  </Text>
+                  <Ionicons name={TYPE_ICONS[t.value]} size={16} color={tint} />
+                  <Text style={[styles.typeBtnText, { color: tint }]}>{t.label}</Text>
                 </TouchableOpacity>
-              ))}
-            </View>
+              );
+            })}
           </View>
 
-          <View style={styles.fieldGroup}>
-            <Text style={[styles.fieldLabel, { color: colors.muted }]}>Color</Text>
-            <View style={styles.colorRow}>
-              {CATEGORY_COLORS.map((c) => {
-                const selected = form.color.toLowerCase() === c.toLowerCase();
-                return (
-                  <TouchableOpacity
-                    key={c}
-                    onPress={() => setField('color', c)}
-                    style={[
-                      styles.colorSwatch,
-                      { backgroundColor: c },
-                      selected && [styles.colorSwatchSelected, { borderColor: colors.text }],
-                    ]}
-                  />
-                );
-              })}
-            </View>
+          {/* Color */}
+          <Text style={[styles.sectionLabel, { color: colors.muted }]}>Color</Text>
+          <View style={[styles.card, styles.colorCard, { backgroundColor: colors.glassStrong, borderColor: colors.glassBorder, shadowColor: colors.shadow }]}>
+            {CATEGORY_COLORS.map((c) => {
+              const selected = form.color.toLowerCase() === c.toLowerCase();
+              return (
+                <TouchableOpacity
+                  key={c}
+                  onPress={() => setField('color', c)}
+                  activeOpacity={0.8}
+                  style={[styles.swatchWrap, selected && { borderColor: c }]}
+                >
+                  <View style={[styles.swatch, { backgroundColor: c }]}>
+                    {selected && <Ionicons name="checkmark" size={18} color="#fff" />}
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </View>
 
-          <Text style={[styles.fieldLabel, { color: colors.muted }]}>Subcategories</Text>
-          <View style={styles.subsList}>
-            {form.subs.map((s) => (
-              <View key={s._key} style={[styles.subRow, { backgroundColor: colors.bg }]}>
-                <View style={{ width: 42 }}>
-                  <AppInput
-                    value={s.icon}
-                    onChangeText={(v) => patchSub(s._key, { icon: firstEmoji(v) })}
-                    style={styles.subEmojiInput}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <AppInput
-                    value={s.name}
-                    onChangeText={(v) => patchSub(s._key, { name: v })}
-                    placeholder="Subcategory name"
-                  />
-                </View>
-                <TouchableOpacity style={styles.subRemoveBtn} onPress={() => removeSub(s._key)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-                  <Text style={{ color: colors.danger, fontSize: 15, fontFamily: 'Nunito_700Bold' }}>✕</Text>
+          {/* Subcategories */}
+          <View style={styles.sectionHead}>
+            <Text style={[styles.sectionLabel, { color: colors.muted }]}>Subcategories</Text>
+            <Text style={[styles.sectionCount, { color: colors.muted }]}>{subCount}</Text>
+          </View>
+          <View style={[styles.card, styles.subsCard, { backgroundColor: colors.glassStrong, borderColor: colors.glassBorder, shadowColor: colors.shadow }]}>
+            {form.subs.map((sub) => (
+              <View key={sub._key} style={[styles.subRow, { borderBottomColor: colors.border2 }]}>
+                <TextInput
+                  value={sub.icon}
+                  onChangeText={(v) => patchSub(sub._key, { icon: firstEmoji(v) })}
+                  style={[styles.subIcon, { backgroundColor: form.color + '22' }]}
+                />
+                <TextInput
+                  value={sub.name}
+                  onChangeText={(v) => patchSub(sub._key, { name: v })}
+                  placeholder="Subcategory name"
+                  placeholderTextColor={colors.placeholder}
+                  style={[styles.subName, { color: colors.text }]}
+                />
+                <TouchableOpacity onPress={() => removeSub(sub._key)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                  <Ionicons name="trash-outline" size={18} color={colors.muted} />
                 </TouchableOpacity>
               </View>
             ))}
-            <TouchableOpacity style={[styles.addSubBtn, { borderColor: colors.accent }]} onPress={addSub} activeOpacity={0.7}>
-              <Text style={[styles.addSubText, { color: colors.accent }]}>+ Add subcategory</Text>
+            <TouchableOpacity style={[styles.addSubBtn, { backgroundColor: colors.surface2 }]} onPress={addSub} activeOpacity={0.7}>
+              <Ionicons name="add" size={20} color={colors.accent} />
+              <Text style={[styles.addSubText, { color: colors.accent }]}>Add subcategory</Text>
             </TouchableOpacity>
           </View>
-
           <AppButton onPress={handleSave} loading={saving} fullWidth style={{ marginTop: 8 }}>
-            Save
+            {isNew ? 'Add category' : 'Save changes'}
           </AppButton>
         </ScrollView>
+
       </KeyboardAvoidingView>
 
       <ConfirmModal
@@ -306,35 +332,96 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   headerTitle: { fontSize: 17, fontFamily: 'Lora_700Bold' },
-  content: { padding: 16, gap: 14 },
-  iconNameRow: { flexDirection: 'row', gap: 10, alignItems: 'flex-end' },
-  fieldGroup: { gap: 8 },
-  fieldLabel: { fontSize: 13, fontFamily: 'Nunito_500Medium' },
-  typeToggle: {
-    flexDirection: 'row',
-    borderRadius: 12,
-    overflow: 'hidden',
-    padding: 4,
-    gap: 4,
+  content: { padding: 16, paddingBottom: 24, gap: 10 },
+  card: {
+    borderWidth: 1,
+    borderRadius: radius.xl,
+    padding: 16,
+    shadowOffset: { width: 0, height: 18 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
+    elevation: 3,
   },
-  typeBtn: { flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 8 },
+  iconNameRow: { flexDirection: 'row', gap: 12 },
+  iconCol: { alignItems: 'center' },
+  fieldLabel: { fontSize: 13, fontFamily: 'Nunito_700Bold', marginBottom: 6 },
+  iconTile: {
+    width: 64,
+    height: 64,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    textAlign: 'center',
+    fontSize: 28,
+    fontFamily: 'Nunito_400Regular',
+  },
+  summary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 14,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderStyle: 'dashed',
+  },
+  summaryDot: { width: 10, height: 10, borderRadius: 5 },
+  summaryText: { fontSize: 13, fontFamily: 'Nunito_600SemiBold' },
+  sectionLabel: {
+    marginTop: 14,
+    fontSize: 11,
+    fontFamily: 'Nunito_700Bold',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
+  sectionHead: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
+  sectionCount: { fontSize: 11, fontFamily: 'Nunito_700Bold' },
+  typeToggle: { flexDirection: 'row', borderRadius: 12, overflow: 'hidden', padding: 4, gap: 4 },
+  typeBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: 6,
+    paddingVertical: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+  },
   typeBtnText: { fontSize: 14, fontFamily: 'Nunito_600SemiBold' },
-  colorRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  colorSwatch: { width: 32, height: 32, borderRadius: 16 },
-  colorSwatchSelected: { borderWidth: 3 },
-  subsList: { gap: 8 },
-  subRow: { flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 10, padding: 8 },
-  subEmojiInput: { textAlign: 'center', fontFamily: 'Nunito_400Regular', fontSize: 16 },
-  subRemoveBtn: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  colorCard: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: 8, paddingVertical: 14 },
+  swatchWrap: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  swatch: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
+  subsCard: { padding: 0, overflow: 'hidden' },
+  subRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+  },
+  subIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: radius.sm,
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'Nunito_400Regular',
+    padding: 0,
+  },
+  subName: { flex: 1, fontSize: 16, fontFamily: 'Nunito_600SemiBold', paddingVertical: 8 },
   addSubBtn: {
     flexDirection: 'row',
     gap: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 42,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderStyle: 'dashed',
+    height: 52,
   },
-  addSubText: { fontSize: 14, fontFamily: 'Nunito_600SemiBold' },
+  addSubText: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
 });

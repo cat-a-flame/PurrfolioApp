@@ -704,7 +704,7 @@ export default function StatsScreen() {
               <View key={r.name} style={styles.catRow}>
                 <EmojiTile emoji={r.icon} color={r.color} />
                 <View style={styles.catMain}>
-                  <Text style={[styles.catName, { color: colors.text }]}>{r.name}</Text>
+                  <Text style={[styles.catName, { color: colors.text }]} numberOfLines={1}>{r.name}</Text>
                   <View style={[styles.track, { backgroundColor: colors.border2 }]}>
                     <View style={[styles.fill, { width: `${(r.amount / maxAmount) * 100}%`, backgroundColor: r.color }]} />
                   </View>
@@ -730,8 +730,8 @@ export default function StatsScreen() {
                 <Pressable style={styles.catRow} onPress={() => setOtherExpanded(v => !v)} accessibilityState={{ expanded: otherExpanded }}>
                   <EmojiTile emoji="📁" color={OTHER_COLOR} />
                   <View style={[styles.catMain, styles.catOtherLabel]}>
-                    <Text style={[styles.catName, { color: colors.text }]}>Other</Text>
-                    <Text style={[styles.catOtherHint, { color: colors.muted }]}>
+                    <Text style={[styles.catName, styles.catOtherName, { color: colors.text }]} numberOfLines={1}>Other</Text>
+                    <Text style={[styles.catOtherHint, { color: colors.muted }]} numberOfLines={1}>
                       {small.length} under {formatBase(otherThreshold)}
                     </Text>
                     <Ionicons name={otherExpanded ? 'chevron-up' : 'chevron-down'} size={14} color={colors.muted} />
@@ -742,7 +742,7 @@ export default function StatsScreen() {
                 {otherExpanded && small.map(r => (
                   <View key={r.name} style={[styles.catRow, styles.catSubRow]}>
                     <EmojiTile emoji={r.icon} color={r.color} size={32} />
-                    <Text style={[styles.catName, styles.catMain, { color: colors.text }]}>{r.name}</Text>
+                    <Text style={[styles.catName, styles.catMain, { color: colors.text }]} numberOfLines={1}>{r.name}</Text>
                     <Text style={[styles.catPct, { color: colors.muted }]}>{formatShare(r.share)}</Text>
                     <Text style={[styles.catAmount, { color: colors.text }]}>{formatBase(Math.round(r.amount))}</Text>
                   </View>
@@ -792,7 +792,7 @@ export default function StatsScreen() {
                   <View style={styles.compTop}>
                     <EmojiTile emoji={c.icon} color={c.color} size={34} />
                     <View style={styles.compMain}>
-                      <Text style={[styles.compName, { color: colors.text }]}>{c.name}</Text>
+                      <Text style={[styles.compName, { color: colors.text }]} numberOfLines={1}>{c.name}</Text>
                       <Text style={[styles.compAmountPrev, { color: colors.muted }]}>was {formatBase(c.prev)}</Text>
                     </View>
                     <View style={styles.compAmounts}>
@@ -912,6 +912,7 @@ const styles = StyleSheet.create({
   moreBtnText: { fontSize: 13, fontFamily: 'Nunito_700Bold' },
   catOther: { borderTopWidth: 1, paddingTop: 14, gap: 12 },
   catOtherLabel: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  catOtherName: { flexShrink: 0 },
   catOtherHint: { flexShrink: 1, fontSize: 12, fontFamily: 'Nunito_600SemiBold' },
   catSubRow: { paddingLeft: 12 },
 

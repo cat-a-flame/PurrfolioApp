@@ -76,7 +76,7 @@ export default function AppHeader({ title, rightAction, showBack, onBack }: Prop
       title: 'Data & security',
       items: [
         { label: 'Security',        route: '/settings/security', icon: 'lock-closed-outline' },
-        { label: 'Import & export', route: '/settings/export',   icon: 'swap-vertical-outline' },
+        { label: 'Export data',     route: '/settings/export',   icon: 'swap-vertical-outline' },
       ],
     },
   ];
