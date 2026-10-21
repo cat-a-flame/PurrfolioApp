@@ -12,6 +12,7 @@ import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/lib/theme';
 import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
+import AppHeader from '@/components/AppHeader';
 import NumPad from '@/components/NumPad';
 import BottomModal from '@/components/BottomModal';
 import DatePickerModal from '@/components/DatePickerModal';
@@ -205,14 +206,10 @@ export default function AddPaymentScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      {/* Header */}
-      <View style={[styles.headerBar, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn}>
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Add recurring payment</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      <AppHeader
+        title="New planned payment"
+        leading="close"
+      />
 
       <View style={{ flex: 1 }}>
         <ScrollView
@@ -233,7 +230,7 @@ export default function AddPaymentScreen() {
                 ]}
                 onPress={() => { setField('type', t); setField('category_id', ''); }}
               >
-                <Text style={[styles.typeBtnText, { color: form.type === t ? '#fff' : colors.muted }]}>
+                <Text style={[styles.typeBtnText, { color: form.type === t ? colors.onAccent : colors.muted }]}>
                   {t === 'expense' ? 'Expense' : 'Income'}
                 </Text>
               </TouchableOpacity>
@@ -398,7 +395,7 @@ export default function AddPaymentScreen() {
           <NumPad onKey={handleNumPadKey} />
           <View style={styles.saveRow}>
             <AppButton onPress={handleSave} loading={saving} fullWidth>
-              Save recurring payment
+              Add planned payment
             </AppButton>
           </View>
         </View>
@@ -510,53 +507,47 @@ export default function AddPaymentScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  headerBar: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1,
-  },
-  headerBtn: { width: 40, alignItems: 'flex-start', justifyContent: 'center' },
-  headerTitle: { fontSize: 17, fontFamily: 'Lora_700Bold' },
   form: { padding: 16, gap: 16 },
   bottomBlock: { borderTopWidth: StyleSheet.hairlineWidth },
   saveRow: { paddingHorizontal: 12, paddingTop: 8, paddingBottom: 4 },
-  error: { fontFamily: 'Nunito_400Regular', fontSize: 14, textAlign: 'center' },
+  error: { fontFamily: 'Nunito_400Regular', fontSize: 15, textAlign: 'center' },
 
   typeToggle: {
-    flexDirection: 'row', borderRadius: 12, borderWidth: 1,
+    flexDirection: 'row', borderRadius: 14, borderWidth: 1,
     overflow: 'hidden', padding: 4, gap: 4,
   },
-  typeBtn: { flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 8 },
+  typeBtn: { flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 10 },
   typeBtnText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
 
   amountSection: { alignItems: 'center', gap: 4 },
   amountDisplay: {
     flexDirection: 'row', alignItems: 'flex-end',
-    justifyContent: 'center', paddingVertical: 8, gap: 6,
+    justifyContent: 'center', paddingVertical: 8, gap: 8,
   },
   amountText: { fontSize: 52, fontFamily: 'Lora_400Regular', paddingVertical: 0 },
-  currencyLabel: { fontSize: 15, fontFamily: 'Nunito_700Bold', marginBottom: 10 },
+  currencyLabel: { fontSize: 15, fontFamily: 'Nunito_700Bold', marginBottom: 12 },
 
   row: { flexDirection: 'row', gap: 8 },
 
   fieldGroup: { gap: 8 },
-  fieldLabel: { fontSize: 12, fontFamily: 'Nunito_500Medium', marginBottom: 4 },
+  fieldLabel: { fontSize: 12, fontFamily: 'Nunito_600SemiBold', marginBottom: 4 },
   pickerBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 14, paddingVertical: 12, borderRadius: 12, borderWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 16, paddingVertical: 12, borderRadius: 14, borderWidth: StyleSheet.hairlineWidth,
   },
-  pickerBtnText: { fontFamily: 'Nunito_400Regular', fontSize: 14, flex: 1 },
+  pickerBtnText: { fontFamily: 'Nunito_400Regular', fontSize: 15, flex: 1 },
 
   moreToggle: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 6, paddingVertical: 10, borderRadius: 10, borderWidth: 1, borderStyle: 'dashed',
+    gap: 8, paddingVertical: 12, borderRadius: 10, borderWidth: 1, borderStyle: 'dashed',
   },
-  moreToggleText: { fontSize: 14, fontFamily: 'Nunito_500Medium' },
+  moreToggleText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
   clearText: { fontFamily: 'Nunito_400Regular', fontSize: 13, textAlign: 'right' },
 
   modalRow: {
     flexDirection: 'row', alignItems: 'center',
     paddingVertical: 12, paddingHorizontal: 4,
-    borderBottomWidth: StyleSheet.hairlineWidth, gap: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth, gap: 12,
   },
   modalRowIcon: { fontFamily: 'Nunito_400Regular', fontSize: 20, width: 28, textAlign: 'center' },
   modalRowText: { flex: 1, fontFamily: 'Nunito_400Regular', fontSize: 15 },

@@ -52,7 +52,7 @@ function TransactionsTransactionRow({ transaction: tx, onPress, onLongPress, onI
         >
           {selectionMode ? (
             selected
-              ? <Ionicons name="checkmark" size={20} color="#fff" />
+              ? <Ionicons name="checkmark" size={20} color={colors.onAccent} />
               : <Ionicons name="ellipse-outline" size={20} color={colors.muted} />
           ) : isTransfer ? (
             <Ionicons name="swap-horizontal-outline" size={20} color={colors.muted} />
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
     paddingHorizontal: 12,
   },
   iconBox: {
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   icon: { fontFamily: 'Nunito_400Regular', fontSize: 20 },
-  iconFallback: { fontSize: 16, fontFamily: 'Nunito_600SemiBold' },
+  iconFallback: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
   info: {
     flex: 1,
     gap: 2,
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 4,
   },
   sub: {
     flexShrink: 1,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 8,
   },
   labelText: {
     fontFamily: 'Nunito_400Regular', fontSize: 13,
@@ -182,14 +182,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    columnGap: 5,
+    columnGap: 4,
     alignItems: 'center',
   },
   subtext: {
     marginTop: 4,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     paddingTop: 8,
     gap: 4,
     flexWrap: 'wrap',

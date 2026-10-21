@@ -12,6 +12,7 @@ import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/lib/theme';
 import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
+import AppHeader from '@/components/AppHeader';
 import BottomModal from '@/components/BottomModal';
 import DatePickerModal from '@/components/DatePickerModal';
 import CategoryPickerModal from '@/components/CategoryPickerModal';
@@ -318,15 +319,10 @@ export default function AddTransactionScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      {/* Header */}
-      <View style={styles.headerBar}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn}>
-          <Ionicons name="close" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>New transaction</Text>
-        <View style={{ width: 40 }} />
-
-      </View>
+      <AppHeader
+        title="New transaction"
+        leading="close"
+      />
 
       {/* Scrollable form */}
       <ScrollView
@@ -347,7 +343,7 @@ export default function AddTransactionScreen() {
               ]}
               onPress={() => { setField('type', t.value); setField('category_id', ''); setActiveField('amount'); }}
             >
-              <Text style={[styles.typeBtnText, { color: form.type === t.value ? '#fff' : colors.muted }]}>
+              <Text style={[styles.typeBtnText, { color: form.type === t.value ? colors.onAccent : colors.muted }]}>
                 {t.label}
               </Text>
             </TouchableOpacity>
@@ -504,7 +500,7 @@ export default function AddTransactionScreen() {
             <View style={styles.row}>
               <View style={{ flex: 1 }}>
                 <TouchableOpacity style={[styles.pickerBtn, { borderColor: errors.date ? colors.danger : colors.border, backgroundColor: colors.surface }]} onPress={() => setShowDatePicker(true)}>
-                  <Ionicons name="calendar" size={15} color={colors.muted} style={{ marginRight: 6 }} />
+                  <Ionicons name="calendar" size={15} color={colors.muted} style={{ marginRight: 8 }} />
                   <Text style={[styles.pickerBtnText, { color: colors.text }]}>{dateLabel}</Text>
                 </TouchableOpacity>
                 <FieldError message={errors.date} />
@@ -570,7 +566,7 @@ export default function AddTransactionScreen() {
         <NumPad onKey={handleNumPadKey} />
         <View style={styles.saveRow}>
           <AppButton onPress={handleSave} loading={loading} fullWidth>
-            Add
+            Add transaction
           </AppButton>
         </View>
       </View>
@@ -654,20 +650,11 @@ export default function AddTransactionScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  headerBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  headerBtn: { width: 40, alignItems: 'flex-start', justifyContent: 'center' },
-  headerTitle: { fontSize: 17, fontFamily: 'Lora_700Bold' },
-  form: { padding: 16, gap: 14 },
-  error: { fontFamily: 'Nunito_400Regular', fontSize: 14, textAlign: 'center' },
+  form: { padding: 16, gap: 16 },
+  error: { fontFamily: 'Nunito_400Regular', fontSize: 15, textAlign: 'center' },
   typeToggle: {
     flexDirection: 'row',
-    borderRadius: 12,
+    borderRadius: 14,
     overflow: 'hidden',
     padding: 4,
     gap: 4,
@@ -676,7 +663,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 8,
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 10,
   },
   typeBtnText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
 
@@ -695,7 +682,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
     paddingVertical: 8,
-    gap: 6,
+    gap: 8,
   },
   amountText: {
     fontSize: 52,
@@ -705,7 +692,7 @@ const styles = StyleSheet.create({
   currencyLabel: {
     fontSize: 15,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 10,
+    marginBottom: 12,
   },
 
   /* Transfer amount block */
@@ -718,13 +705,13 @@ const styles = StyleSheet.create({
   transferAmountField: {
     borderRadius: 10,
     borderWidth: 1,
-    padding: 10,
+    padding: 12,
     gap: 2,
   },
-  transferFieldLabel: { fontSize: 11, fontFamily: 'Nunito_500Medium' },
-  transferAmountRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  transferAmountText: { flex: 1, fontSize: 22, fontFamily: 'Lora_400Regular' },
-  transferCurrency: { fontSize: 14, fontFamily: 'Nunito_700Bold' },
+  transferFieldLabel: { fontSize: 11, fontFamily: 'Nunito_600SemiBold' },
+  transferAmountRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  transferAmountText: { flex: 1, fontSize: 20, fontFamily: 'Lora_400Regular' },
+  transferCurrency: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
   arrowCircle: {
     width: 28, height: 28, borderRadius: 14,
     alignItems: 'center', justifyContent: 'center',
@@ -736,22 +723,22 @@ const styles = StyleSheet.create({
   /* Pickers */
   row: { flexDirection: 'row', gap: 8 },
   fieldGroup: { gap: 8, flexDirection: 'row' },
-  fieldLabel: { fontSize: 12, fontFamily: 'Nunito_500Medium', marginBottom: 4 },
+  fieldLabel: { fontSize: 12, fontFamily: 'Nunito_600SemiBold', marginBottom: 4 },
   pickerBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: StyleSheet.hairlineWidth,
   },
-  pickerBtnText: { fontFamily: 'Nunito_400Regular', fontSize: 14, flex: 1 },
+  pickerBtnText: { fontFamily: 'Nunito_400Regular', fontSize: 15, flex: 1 },
   pickerBtn2: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 14,
     flexGrow: 1,
     flexShrink: 0,
     borderWidth: StyleSheet.hairlineWidth,
@@ -762,7 +749,7 @@ const styles = StyleSheet.create({
     gap: 4,
     alignSelf: 'center',
   },
-  pickerBtnInlineText: { fontFamily: 'Nunito_400Regular', fontSize: 14 },
+  pickerBtnInlineText: { fontFamily: 'Nunito_400Regular', fontSize: 15 },
   rowFieldGroup: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -772,10 +759,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
+    gap: 8,
     paddingVertical: 8,
   },
-  moreToggleText: { fontSize: 15, fontFamily: 'Nunito_500Medium' },
+  moreToggleText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
 
   /* Bottom block */
   bottomBlock: {
@@ -794,7 +781,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 4,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    gap: 10,
+    gap: 12,
   },
   modalRowIcon: { fontFamily: 'Nunito_400Regular', fontSize: 20, width: 28, textAlign: 'center' },
   modalRowText: { flex: 1, fontFamily: 'Nunito_400Regular', fontSize: 15 },

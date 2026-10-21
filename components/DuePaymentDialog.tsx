@@ -45,7 +45,7 @@ export default function DuePaymentDialog({ due, onPay, onSkip, onClose }: Props)
               onPress={onPay}
               activeOpacity={0.8}
             >
-              <Text style={styles.btnText}>Mark as paid</Text>
+              <Text style={[styles.btnText, { color: colors.onAccent }]}>Mark as paid</Text>
             </TouchableOpacity>
             <View style={styles.row}>
               <TouchableOpacity
@@ -84,11 +84,11 @@ const styles = StyleSheet.create({
     shadowRadius: 40,
     elevation: 16,
   },
-  title: { flexShrink: 1, fontSize: 20, fontFamily: 'Lora_700Bold', letterSpacing: -0.3, textAlign: 'center' },
-  date: { fontSize: 13, fontFamily: 'Nunito_500Medium', textAlign: 'center' },
+  title: { flexShrink: 1, fontSize: 20, fontFamily: 'Lora_700Bold', letterSpacing: -0.2, textAlign: 'center' },
+  date: { fontSize: 13, fontFamily: 'Nunito_600SemiBold', textAlign: 'center' },
   amount: { fontSize: 28, fontFamily: 'Lora_700Bold', textAlign: 'center', marginBottom: 8 },
   row: { flexDirection: 'row', gap: 12 },
   rowBtn: { flex: 1 },
-  btn: { alignItems: 'center', justifyContent: 'center', borderRadius: 12, paddingVertical: 14 },
-  btnText: { fontSize: 16, fontFamily: 'Nunito_600SemiBold', color: '#fff' },
+  btn: { alignItems: 'center', justifyContent: 'center', borderRadius: 9999, paddingVertical: 16 },
+  btnText: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
 });

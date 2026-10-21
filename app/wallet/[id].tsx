@@ -15,6 +15,7 @@ import { useTheme } from '@/lib/theme';
 import { Ionicons } from '@expo/vector-icons';
 import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
+import AppHeader, { HeaderIconButton } from '@/components/AppHeader';
 import BottomModal from '@/components/BottomModal';
 import ConfirmModal from '@/components/ConfirmModal';
 import { Events } from '@/lib/events';
@@ -116,29 +117,22 @@ export default function WalletScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      {/* Header */}
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <Ionicons name="arrow-back" size={24} color={colors.accent} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>
-          {isNew ? 'Add account' : 'Edit account'}
-        </Text>
-        {!isNew ? (
-          <TouchableOpacity onPress={() => setConfirmDelete(true)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Ionicons name="trash-outline" size={22} color={colors.danger} />
-          </TouchableOpacity>
-        ) : (
-          <View style={{ width: 24 }} />
-        )}
-      </View>
+      <AppHeader
+        title={isNew ? 'New account' : 'Edit account'}
+        leading="close"
+        rightAction={
+          !isNew ? (
+            <HeaderIconButton icon="trash-outline" tone="danger" label="Delete account" onPress={() => setConfirmDelete(true)} />
+          ) : undefined
+        }
+      />
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior="padding"
       >
         <ScrollView
-          contentContainerStyle={[styles.content, { paddingBottom: bottom + 32 }]}
+          contentContainerStyle={[styles.content, { paddingBottom: 24 }]}
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.iconNameRow}>
@@ -223,10 +217,12 @@ export default function WalletScreen() {
             </View>
           )}
 
-          <AppButton onPress={handleSave} loading={saving} fullWidth style={{ marginTop: 8 }}>
-            Save
-          </AppButton>
         </ScrollView>
+        <View style={[styles.footer, { backgroundColor: colors.surface, borderTopColor: colors.border, paddingBottom: bottom + 12 }]}>
+          <AppButton onPress={handleSave} loading={saving} fullWidth>
+            {isNew ? 'Add account' : 'Save changes'}
+          </AppButton>
+        </View>
       </KeyboardAvoidingView>
 
       <BottomModal visible={typePickerVisible} onClose={() => setTypePickerVisible(false)} title="Type">
@@ -278,26 +274,18 @@ export default function WalletScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-  },
-  headerTitle: { fontSize: 17, fontFamily: 'Lora_700Bold' },
-  content: { padding: 16, gap: 14 },
-  iconNameRow: { flexDirection: 'row', gap: 10, alignItems: 'flex-end' },
+  footer: { paddingHorizontal: 16, paddingTop: 12, borderTopWidth: 1 },
+  content: { padding: 16, gap: 16 },
+  iconNameRow: { flexDirection: 'row', gap: 12, alignItems: 'flex-end' },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  rowLabel: { fontFamily: 'Nunito_400Regular', fontSize: 14 },
+  rowLabel: { fontFamily: 'Nunito_400Regular', fontSize: 15 },
   rowSub: { fontSize: 12, fontFamily: 'Nunito_400Regular' },
   currencyWrapper: {
     gap: 4,
   },
   currencyLabel: {
     fontSize: 13,
-    fontFamily: 'Nunito_500Medium',
+    fontFamily: 'Nunito_600SemiBold',
     marginBottom: 2,
   },
   currencyDropdown: {
@@ -305,7 +293,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderRadius: 10,
     borderWidth: 1,
     minHeight: 42,

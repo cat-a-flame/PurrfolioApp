@@ -50,10 +50,10 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 14,
     borderWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     fontSize: 15,
-    fontFamily: 'Nunito_500Medium',
+    fontFamily: 'Nunito_600SemiBold',
     minHeight: 48,
   },
   // Soft glow ring, the native stand-in for the web input's focus box-shadow

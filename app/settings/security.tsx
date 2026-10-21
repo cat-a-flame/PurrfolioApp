@@ -196,7 +196,7 @@ export default function SecurityScreen() {
   if (phase !== 'idle') {
     return (
       <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-        <AppHeader title="Security" showBack onBack={cancelPhase} />
+        <AppHeader title="Security" leading="back" onBack={cancelPhase} />
         <PinPad
           title={phaseTitle[phase]}
           subtitle={phaseSubtitle[phase]}
@@ -213,7 +213,7 @@ export default function SecurityScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <AppHeader title="Security" showBack />
+      <AppHeader title="Security" leading="back" />
       <View style={styles.container}>
 
         <View style={styles.section}>
@@ -318,9 +318,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
   },
-  rowLabel: { fontFamily: 'Nunito_400Regular', fontSize: 16 },
+  rowLabel: { fontFamily: 'Nunito_400Regular', fontSize: 15 },
   rowHint: { fontFamily: 'Nunito_400Regular', fontSize: 12, marginTop: 2 },
   divider: { height: 1, marginHorizontal: 16 },
 });

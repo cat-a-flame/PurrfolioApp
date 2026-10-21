@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/lib/theme';
+import AppHeader, { HeaderIconButton } from '@/components/AppHeader';
 import { Ionicons } from '@expo/vector-icons';
 import type { Category } from '@/lib/types';
 import SkeletonBox from '@/components/SkeletonBox';
@@ -38,18 +39,11 @@ export default function CategoriesScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <View style={styles.backRow}>
-            <Ionicons name="arrow-back" size={18} color={colors.accent} />
-            <Text style={[styles.back, { color: colors.accent }]}>Back</Text>
-          </View>
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>Categories</Text>
-        <TouchableOpacity onPress={() => router.push('/category/new')} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <Ionicons name="add-circle-outline" size={26} color={colors.accent} />
-        </TouchableOpacity>
-      </View>
+      <AppHeader
+        title="Categories"
+        leading="back"
+        rightAction={<HeaderIconButton icon="add" tone="accent" label="Add category" onPress={() => router.push('/category/new')} />}
+      />
 
       <View style={styles.searchWrap}>
         <View style={[styles.searchBox, { backgroundColor: colors.surface }]}>
@@ -74,7 +68,7 @@ export default function CategoriesScreen() {
           {Array.from({ length: 6 }).map((_, i) => (
             <View key={i} style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
               <SkeletonBox style={{ width: 50, height: 50, borderRadius: 14 }} />
-              <View style={{ flex: 1, gap: 6 }}>
+              <View style={{ flex: 1, gap: 8 }}>
                 <SkeletonBox style={{ height: 15, width: '60%', borderRadius: 4 }} />
               </View>
             </View>
@@ -118,16 +112,6 @@ export default function CategoriesScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    borderBottomWidth: 1,
-  },
-  backRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  back: { fontFamily: 'Nunito_400Regular', fontSize: 15 },
-  title: { fontSize: 18, fontFamily: 'Lora_700Bold' },
   searchWrap: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 4 },
   searchBox: {
     flexDirection: 'row',
@@ -143,7 +127,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    padding: 14,
+    padding: 16,
     borderRadius: 26,
     borderWidth: 1,
   },
@@ -156,10 +140,10 @@ const styles = StyleSheet.create({
   },
   iconEmoji: { fontFamily: 'Nunito_400Regular', fontSize: 24 },
   info: { flex: 1, gap: 2 },
-  name: { flexShrink: 1, fontSize: 16, fontFamily: 'Nunito_700Bold' },
+  name: { flexShrink: 1, fontSize: 15, fontFamily: 'Nunito_700Bold' },
   subLabel: { fontSize: 12, fontFamily: 'Nunito_600SemiBold' },
-  empty: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 6, padding: 32 },
-  emptyIcon: { fontFamily: 'Nunito_400Regular', fontSize: 32, marginBottom: 4 },
-  emptyTitle: { fontSize: 16, fontFamily: 'Lora_700Bold' },
+  empty: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8, padding: 32 },
+  emptyIcon: { fontFamily: 'Nunito_400Regular', fontSize: 28, marginBottom: 4 },
+  emptyTitle: { fontSize: 15, fontFamily: 'Lora_700Bold' },
   emptyHint: { fontFamily: 'Nunito_400Regular', fontSize: 13, textAlign: 'center' },
 });

@@ -43,7 +43,7 @@ export default function AppButton({
   const textColor = {
     primary: '#ffffff',
     secondary: colors.text,
-    danger: '#ffffff',
+    danger: colors.onAccent,
     ghost: colors.accent,
   }[variant];
 
@@ -111,8 +111,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   text: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Nunito_700Bold',
-    letterSpacing: -0.1,
   },
 });

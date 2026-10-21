@@ -142,12 +142,12 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   title: {
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: 'Lora_700Bold',
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: 'Nunito_400Regular',
     textAlign: 'center',
     marginTop: -20,
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     height: 76,
   },
   keyLabel: {
-    fontSize: 26,
+    fontSize: 28,
     fontFamily: 'Nunito_400Regular',
   },
 });

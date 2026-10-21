@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '@/lib/theme';
 
 type Props = {
   visible: boolean;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export default function Toast({ visible, message, success, bottomOffset = 100, onUndo }: Props) {
+  const colors = useTheme();
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(16)).current;
 
@@ -36,7 +38,7 @@ export default function Toast({ visible, message, success, bottomOffset = 100, o
         styles.toast,
         {
           bottom: bottomOffset,
-          backgroundColor: success ? '#16a34a' : '#dc2626',
+          backgroundColor: success ? colors.income : colors.danger,
           opacity,
           transform: [{ translateY }],
         },
@@ -45,12 +47,12 @@ export default function Toast({ visible, message, success, bottomOffset = 100, o
       <Ionicons
         name={success ? 'checkmark-circle' : 'close-circle'}
         size={18}
-        color="#fff"
+        color={colors.onAccent}
       />
-      <Text style={styles.text}>{message}</Text>
+      <Text style={[styles.text, { color: colors.onAccent }]}>{message}</Text>
       {onUndo && (
         <TouchableOpacity onPress={onUndo} hitSlop={8}>
-          <Text style={styles.undoBtn}>Undo</Text>
+          <Text style={[styles.undoBtn, { color: colors.onAccent }]}>Undo</Text>
         </TouchableOpacity>
       )}
     </Animated.View>
@@ -64,9 +66,9 @@ const styles = StyleSheet.create({
     right: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
     paddingHorizontal: 16,
-    paddingVertical: 13,
+    paddingVertical: 12,
     borderRadius: 18,
     elevation: 6,
     shadowColor: '#000',
@@ -76,13 +78,11 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
-    color: '#fff',
-    fontSize: 14,
-    fontFamily: 'Nunito_500Medium',
+    fontSize: 15,
+    fontFamily: 'Nunito_600SemiBold',
   },
   undoBtn: {
-    color: '#fff',
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: 'Nunito_700Bold',
     textDecorationLine: 'underline',
     opacity: 0.9,

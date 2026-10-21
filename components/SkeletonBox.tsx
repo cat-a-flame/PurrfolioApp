@@ -19,7 +19,7 @@ export default function SkeletonBox({ style }: { style?: ViewStyle }) {
 
   return (
     <Animated.View
-      style={[{ backgroundColor: colors.muted, borderRadius: 8, opacity }, style]}
+      style={[{ backgroundColor: colors.muted, borderRadius: 10, opacity }, style]}
     />
   );
 }

@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/lib/theme';
+import AppHeader, { HeaderIconButton } from '@/components/AppHeader';
 import { Events } from '@/lib/events';
 import { fetchWalletBalanceSums } from '@/lib/fetchWalletBalanceSums';
 import { formatCurrency, ACCOUNT_TYPE_LABELS } from '@/lib/utils';
@@ -66,7 +66,7 @@ export default function AccountsScreen() {
       >
         <View style={[styles.walletIcon, { backgroundColor: '#fcf1ff' }]}>
           {w.icon
-            ? <Text style={{ fontFamily: 'Nunito_400Regular', fontSize: 22 }}>{w.icon}</Text>
+            ? <Text style={{ fontFamily: 'Nunito_400Regular', fontSize: 20 }}>{w.icon}</Text>
             : <View style={[styles.walletIconFallback, { backgroundColor: colors.border }]} />}
         </View>
         <View style={styles.walletInfo}>
@@ -93,18 +93,11 @@ export default function AccountsScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <View style={styles.backRow}>
-            <Ionicons name="arrow-back" size={18} color={colors.accent} />
-            <Text style={[styles.back, { color: colors.accent }]}>Back</Text>
-          </View>
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>Accounts</Text>
-        <TouchableOpacity onPress={() => router.push('/wallet/new')} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <Ionicons name="add-circle-outline" size={26} color={colors.accent} />
-        </TouchableOpacity>
-      </View>
+      <AppHeader
+        title="Accounts"
+        leading="back"
+        rightAction={<HeaderIconButton icon="add" tone="accent" label="Add account" onPress={() => router.push('/wallet/new')} />}
+      />
 
       <ScrollView
         contentContainerStyle={[styles.list, { paddingBottom: bottom + 32 }]}
@@ -124,16 +117,6 @@ export default function AccountsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    borderBottomWidth: 1,
-  },
-  backRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  back: { fontFamily: 'Nunito_400Regular', fontSize: 15 },
-  title: { fontSize: 18, fontFamily: 'Lora_700Bold' },
   list: { padding: 16, gap: 16 },
   sectionLabel: { fontSize: 11, fontFamily: 'Nunito_700Bold', textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 4 },
   walletCard: {
@@ -144,11 +127,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   walletIcon: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 10 },
-  walletIconFallback: { width: 28, height: 28, borderRadius: 8 },
-  walletInfo: { flex: 1, paddingVertical: 14, gap: 2 },
+  walletIconFallback: { width: 28, height: 28, borderRadius: 10 },
+  walletInfo: { flex: 1, paddingVertical: 16, gap: 2 },
   walletName: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
-  walletSub: { fontSize: 12, fontFamily: 'Nunito_500Medium' },
-  badge: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 6, marginRight: 8 },
+  walletSub: { fontSize: 12, fontFamily: 'Nunito_600SemiBold' },
+  badge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, marginRight: 8 },
   badgeText: { fontSize: 11, fontFamily: 'Nunito_600SemiBold' },
-  walletBalance: { fontSize: 16, fontFamily: 'Nunito_800ExtraBold' },
+  walletBalance: { fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
 });

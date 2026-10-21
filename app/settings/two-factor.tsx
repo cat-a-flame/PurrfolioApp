@@ -142,7 +142,7 @@ export default function TwoFactorScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <AppHeader title="Two-factor authentication" showBack />
+      <AppHeader title="Two-factor authentication" leading="back" />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         {!loaded || starting ? (
           <ActivityIndicator color={colors.accent} style={{ marginTop: 32 }} />
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     borderRadius: 26,
     borderWidth: 1,
     padding: 16,
-    gap: 14,
+    gap: 16,
   },
   body: { fontSize: 15, lineHeight: 21, fontFamily: 'Nunito_400Regular' },
   step: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
@@ -228,19 +228,19 @@ const styles = StyleSheet.create({
   qr: {
     alignSelf: 'center',
     padding: 12,
-    borderRadius: 16,
+    borderRadius: 14,
     backgroundColor: '#ffffff',
   },
   secret: {
     fontFamily: Platform.select({ ios: 'Menlo', default: 'monospace' }),
-    fontSize: 14,
+    fontSize: 15,
     padding: 12,
-    borderRadius: 12,
+    borderRadius: 14,
     overflow: 'hidden',
     textAlign: 'center',
   },
   codeInput: {
-    fontSize: 22,
+    fontSize: 20,
     letterSpacing: 8,
     textAlign: 'center',
   },

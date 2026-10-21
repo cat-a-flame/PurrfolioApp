@@ -24,22 +24,25 @@ export const lightColors = {
   accent3: '#0ea5c6',
   text: '#5f4c79',
   heading: '#2b1452',
-  muted: '#9284a4',
-  faint: '#9a8fb2',
-  danger: '#e0344a',
+  muted: '#6f6280',
+  faint: '#746a8b',
+  danger: '#d2223f',
   dangerLight: '#fdecef',
   income: '#0f7a57',
   incomeLight: '#d3f5e6',
-  expense: '#e0344a',
+  expense: '#d2223f',
   expenseLight: '#fdecef',
+  warning: '#b3801f',
+  warningLight: '#fdf1de',
+  onAccent: '#ffffff', // text/icons on solid accent/income/expense/danger fills
   border: '#e8e1f6',
   border2: '#f0ebfa',
   tabBar: '#ffffff', // opaque: RN has no backdrop blur, and Android elevation shadows bleed through translucency
   card: '#ffffff',
-  placeholder: '#9a8fb2',
+  placeholder: '#746a8b',
   overlay: 'rgba(28,16,52,0.38)',
   shadow: '#3c1e6e',
-  gradientAccent: ['#7433e6', '#b62ad9', '#ec3f7a'] as const,
+  gradientAccent: ['#7433e6', '#b62ad9', '#dc2d6d'] as const,
   gradientCashflow: ['#2c1370', '#5a22c8', '#9b2bc9'] as const,
 };
 
@@ -61,26 +64,33 @@ export const darkColors: Colors = {
   text: '#f4efff',
   heading: '#ffffff',
   muted: '#b3a7d0',
-  faint: '#7d71a0',
+  faint: '#887cab',
   danger: '#ff6b7d',
   dangerLight: '#3a1220',
   income: '#4ef0a8',
   incomeLight: '#0b2c20',
   expense: '#ff6b7d',
   expenseLight: '#3a1220',
+  warning: '#f5c46b',
+  warningLight: '#3a2a10',
+  onAccent: '#140e24',
   border: '#2c2346',
   border2: '#231b3b',
   tabBar: '#1a1330',
   card: '#140e24',
-  placeholder: '#7d71a0',
+  placeholder: '#887cab',
   overlay: 'rgba(4,0,12,0.66)',
   shadow: '#000000',
-  gradientAccent: ['#7c4dff', '#c026d3', '#f43f75'],
+  gradientAccent: ['#7c4dff', '#c026d3', '#e02865'],
   gradientCashflow: ['#2c1370', '#5a22c8', '#9b2bc9'],
 };
 
 // Shared shape scale (matches the web --radius-* tokens)
-export const radius = { sm: 10, md: 14, lg: 18, xl: 26, full: 9999 } as const;
+export const radius = { xs: 4, sm: 10, md: 14, lg: 18, xl: 26, full: 9999 } as const;
+
+// Spacing (4-pt grid) and type ramp. Style values should snap to these.
+export const space = { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32 } as const;
+export const fontSize = { caption: 11, footnote: 12, small: 13, body: 15, subhead: 17, title3: 20, title2: 24, title1: 28, display: 36, hero: 52 } as const;
 
 type Widen<T> = { [K in keyof T]: T[K] extends readonly string[] ? readonly [string, string, ...string[]] : string };
 export type Colors = Widen<typeof lightColors>;

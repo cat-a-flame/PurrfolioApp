@@ -209,7 +209,7 @@ function StatCard({ colors, icon, iconBg, iconFg, label, amount, amountColor, fo
       {typeof footer === 'string' ? (
         <Text style={[styles.statFooterEmpty, { color: colors.muted }]}>{footer}</Text>
       ) : (
-        <View style={{ gap: 6 }}>
+        <View style={{ gap: 8 }}>
           <View style={styles.statFooterRow}>
             <View style={styles.statFooterLabelWrap}>
               <View style={[styles.statDot, { backgroundColor: footer.color }]} />
@@ -255,7 +255,7 @@ function PredictionPanel({ variant, title, subtitle, items, loading, colors }: {
       </View>
       <View style={styles.predBody}>
         {loading ? (
-          Array.from({ length: 3 }).map((_, i) => <SkeletonBox key={i} style={{ height: 54, borderRadius: 8 }} />)
+          Array.from({ length: 3 }).map((_, i) => <SkeletonBox key={i} style={{ height: 54, borderRadius: 10 }} />)
         ) : items.length === 0 ? (
           <EmptyHint icon={isIncome ? '💰' : '🧾'} text={`Not enough history yet. ${isIncome ? 'Income' : 'Expenses'} appear here once a category shows up in at least ${MIN_BUCKETS_SEEN} of the last ${HISTORY_MONTHS} months.`} colors={colors} />
         ) : (
@@ -652,8 +652,8 @@ export default function StatsScreen() {
         <StatCard
           colors={colors}
           icon="list"
-          iconBg="#fdf1de"
-          iconFg="#b3801f"
+          iconBg={colors.warningLight}
+          iconFg={colors.warning}
           label="Transactions"
           amount={String(animatedTxCount)}
           amountColor={colors.text}
@@ -687,7 +687,7 @@ export default function StatsScreen() {
         {loading ? (
           <>
             <SkeletonBox style={{ height: 20, borderRadius: 10 }} />
-            {Array.from({ length: 5 }).map((_, i) => <SkeletonBox key={i} style={{ height: 44, borderRadius: 8 }} />)}
+            {Array.from({ length: 5 }).map((_, i) => <SkeletonBox key={i} style={{ height: 44, borderRadius: 10 }} />)}
           </>
         ) : categoryCount === 0 ? (
           <EmptyHint icon="🍩" text="No expenses in this period." colors={colors} />
@@ -778,7 +778,7 @@ export default function StatsScreen() {
         )}
 
         {loading ? (
-          Array.from({ length: 4 }).map((_, i) => <SkeletonBox key={i} style={{ height: 56, borderRadius: 8 }} />)
+          Array.from({ length: 4 }).map((_, i) => <SkeletonBox key={i} style={{ height: 56, borderRadius: 10 }} />)
         ) : comparisonData.length === 0 ? (
           <EmptyHint icon="📊" text="No expense data to compare." colors={colors} />
         ) : (
@@ -860,7 +860,7 @@ const styles = StyleSheet.create({
     borderRadius: 26,
     borderWidth: 1,
     padding: 16,
-    gap: 14,
+    gap: 16,
     shadowOffset: { width: 0, height: 18 },
     shadowOpacity: 0.12,
     shadowRadius: 24,
@@ -869,7 +869,7 @@ const styles = StyleSheet.create({
   // Cards whose rows are direct children: roomier spacing between items
   listCard: { gap: 20 },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 },
-  cardTitle: { fontSize: 19, fontFamily: 'Lora_700Bold', letterSpacing: -0.4 },
+  cardTitle: { fontSize: 20, fontFamily: 'Lora_700Bold', letterSpacing: -0.4 },
   cardSubtitle: { fontSize: 13, fontFamily: 'Nunito_700Bold', marginTop: 2 },
 
   track: { height: 6, borderRadius: 3, overflow: 'hidden' },
@@ -884,74 +884,74 @@ const styles = StyleSheet.create({
     minWidth: 150,
     borderRadius: 18,
     borderWidth: 1,
-    padding: 14,
-    gap: 10,
+    padding: 16,
+    gap: 12,
   },
-  statHead: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  statHead: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   statIcon: { width: 38, height: 38, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   statLabel: { flexShrink: 1, fontSize: 12, fontFamily: 'Nunito_700Bold' },
-  statAmount: { fontSize: 22, fontFamily: 'Nunito_800ExtraBold', letterSpacing: -0.3 },
-  statFooterRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 6 },
-  statFooterLabelWrap: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  statAmount: { fontSize: 20, fontFamily: 'Nunito_800ExtraBold', letterSpacing: -0.2 },
+  statFooterRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 4 },
+  statFooterLabelWrap: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   statDot: { width: 6, height: 6, borderRadius: 3 },
   statFooterLabel: { fontSize: 12, fontFamily: 'Nunito_700Bold' },
   statFooterValue: { flexShrink: 1, fontSize: 12, fontFamily: 'Nunito_800ExtraBold' },
   statFooterEmpty: { fontSize: 12, fontFamily: 'Nunito_600SemiBold' },
 
   // Expenses by category
-  catTotalAmount: { fontSize: 16, fontFamily: 'Nunito_900Black', letterSpacing: -0.2 },
+  catTotalAmount: { fontSize: 15, fontFamily: 'Nunito_900Black', letterSpacing: -0.2 },
   catTotalCount: { fontSize: 12, fontFamily: 'Nunito_700Bold' },
-  catStack: { flexDirection: 'row', gap: 3, height: 20, borderRadius: 10, overflow: 'hidden' },
+  catStack: { flexDirection: 'row', gap: 4, height: 20, borderRadius: 10, overflow: 'hidden' },
   catStackSegment: { flexBasis: 0, minWidth: 4 },
-  catRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  catMain: { flex: 1, minWidth: 0, gap: 6 },
-  catName: { flexShrink: 1, fontSize: 14, fontFamily: 'Nunito_700Bold' },
+  catRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  catMain: { flex: 1, minWidth: 0, gap: 8 },
+  catName: { flexShrink: 1, fontSize: 15, fontFamily: 'Nunito_700Bold' },
   catPct: { width: 38, textAlign: 'right', fontSize: 12, fontFamily: 'Nunito_700Bold' },
-  catAmount: { minWidth: 84, textAlign: 'right', fontSize: 14, fontFamily: 'Nunito_800ExtraBold' },
-  moreBtn: { alignSelf: 'center', borderWidth: 1, borderRadius: 9999, paddingHorizontal: 14, paddingVertical: 7 },
+  catAmount: { minWidth: 84, textAlign: 'right', fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
+  moreBtn: { alignSelf: 'center', borderWidth: 1, borderRadius: 9999, paddingHorizontal: 16, paddingVertical: 8 },
   moreBtnText: { fontSize: 13, fontFamily: 'Nunito_700Bold' },
-  catOther: { borderTopWidth: 1, paddingTop: 14, gap: 12 },
-  catOtherLabel: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  catOther: { borderTopWidth: 1, paddingTop: 16, gap: 12 },
+  catOtherLabel: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   catOtherName: { flexShrink: 0 },
   catOtherHint: { flexShrink: 1, fontSize: 12, fontFamily: 'Nunito_600SemiBold' },
   catSubRow: { paddingLeft: 12 },
 
   // Comparison
-  legend: { flexDirection: 'row', flexWrap: 'wrap', gap: 14 },
-  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  legend: { flexDirection: 'row', flexWrap: 'wrap', gap: 16 },
+  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   legendDot: { width: 8, height: 8, borderRadius: 4 },
   legendText: { fontSize: 12, fontFamily: 'Nunito_700Bold' },
   compRow: { gap: 8 },
-  compTop: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  compTop: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   compMain: { flex: 1, minWidth: 0, gap: 2 },
-  compName: { flexShrink: 1, fontSize: 14, fontFamily: 'Nunito_700Bold' },
+  compName: { flexShrink: 1, fontSize: 15, fontFamily: 'Nunito_700Bold' },
   compBars: { gap: 4 },
   compAmounts: { alignItems: 'flex-end', gap: 4 },
-  compAmountCurrent: { fontSize: 14, fontFamily: 'Nunito_800ExtraBold' },
+  compAmountCurrent: { fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
   compAmountPrev: { flexShrink: 1, fontSize: 12, fontFamily: 'Nunito_600SemiBold' },
-  badge: { borderRadius: 9999, paddingHorizontal: 10, paddingVertical: 3 },
+  badge: { borderRadius: 9999, paddingHorizontal: 12, paddingVertical: 4 },
   badgeText: { fontSize: 12, fontFamily: 'Nunito_700Bold' },
-  compTotal: { borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16, gap: 4 },
+  compTotal: { borderRadius: 14, paddingVertical: 16, paddingHorizontal: 16, gap: 4 },
   compTotalLabel: { fontSize: 13, fontFamily: 'Nunito_700Bold' },
-  compTotalFigures: { flexDirection: 'row', alignItems: 'center', gap: 10, flexWrap: 'wrap' },
-  compTotalAmount: { fontSize: 20, fontFamily: 'Nunito_900Black', letterSpacing: -0.3 },
+  compTotalFigures: { flexDirection: 'row', alignItems: 'center', gap: 12, flexWrap: 'wrap' },
+  compTotalAmount: { fontSize: 20, fontFamily: 'Nunito_900Black', letterSpacing: -0.2 },
   compTotalPrev: { fontSize: 12, fontFamily: 'Nunito_600SemiBold' },
 
   // Predictions
   predBody: { gap: 24 },
   predRow: { gap: 8 },
-  predTop: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  predTop: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   predMain: { flex: 1, minWidth: 0, gap: 2 },
-  predTitle: { flexShrink: 1, fontSize: 14, fontFamily: 'Nunito_700Bold' },
+  predTitle: { flexShrink: 1, fontSize: 15, fontFamily: 'Nunito_700Bold' },
   predSubtitle: { flexShrink: 1, fontSize: 12, fontFamily: 'Nunito_600SemiBold' },
   predConfRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   predConfTrack: { flex: 1, height: 4 },
   predConfLabel: { fontSize: 11, fontFamily: 'Nunito_700Bold' },
   predAmountCol: { alignItems: 'flex-end', gap: 2 },
-  predAmount: { fontSize: 14, fontFamily: 'Nunito_800ExtraBold' },
+  predAmount: { fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
   predRange: { fontSize: 11, fontFamily: 'Nunito_600SemiBold' },
 
-  empty: { alignItems: 'center', paddingVertical: 18, gap: 6 },
+  empty: { alignItems: 'center', paddingVertical: 20, gap: 8 },
   emptyIcon: { fontFamily: 'Nunito_400Regular', fontSize: 28 },
   emptyText: { fontSize: 13, fontFamily: 'Nunito_600SemiBold', textAlign: 'center' },
 });

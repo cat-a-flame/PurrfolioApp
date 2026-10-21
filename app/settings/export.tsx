@@ -131,7 +131,7 @@ export default function ExportScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <AppHeader title="Export data" showBack />
+      <AppHeader title="Export data" leading="back" />
       <ScrollView contentContainerStyle={styles.container}>
 
         <View style={styles.section}>
@@ -219,12 +219,12 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   helpText: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
   },
   fieldRow: { flexDirection: 'row', gap: 12 },
-  field: { flex: 1, gap: 6 },
+  field: { flex: 1, gap: 8 },
   fieldLabel: {
     fontSize: 13,
     fontFamily: 'Nunito_600SemiBold',
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderWidth: 1,
     borderRadius: 14,
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     paddingVertical: 12,
     gap: 8,
   },

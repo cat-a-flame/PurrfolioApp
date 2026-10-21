@@ -15,6 +15,7 @@ import { useTheme, radius } from '@/lib/theme';
 import { Ionicons } from '@expo/vector-icons';
 import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
+import AppHeader, { HeaderIconButton } from '@/components/AppHeader';
 import ConfirmModal from '@/components/ConfirmModal';
 import type { TransactionType } from '@/lib/types';
 import { firstEmoji } from '@/lib/utils';
@@ -182,25 +183,18 @@ export default function CategoryScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      {/* Header */}
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <Ionicons name="arrow-back" size={24} color={colors.accent} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.heading }]}>
-          {isNew ? 'Add category' : 'Edit category'}
-        </Text>
-        {!isNew && !isDefault ? (
-          <TouchableOpacity onPress={() => setConfirmDelete(true)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Ionicons name="trash-outline" size={22} color={colors.danger} />
-          </TouchableOpacity>
-        ) : (
-          <View style={{ width: 24 }} />
-        )}
-      </View>
+      <AppHeader
+        title={isNew ? 'New category' : 'Edit category'}
+        leading="close"
+        rightAction={
+          !isNew && !isDefault ? (
+            <HeaderIconButton icon="trash-outline" tone="danger" label="Delete category" onPress={() => setConfirmDelete(true)} />
+          ) : undefined
+        }
+      />
 
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-        <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottom + 32 }]} keyboardShouldPersistTaps="handled">
+        <ScrollView contentContainerStyle={[styles.content, { paddingBottom: 24 }]} keyboardShouldPersistTaps="handled">
           {/* Icon, name and summary */}
           <View style={[styles.card, { backgroundColor: colors.glassStrong, borderColor: colors.glassBorder, shadowColor: colors.shadow }]}>
             <View style={styles.iconNameRow}>
@@ -237,7 +231,7 @@ export default function CategoryScreen() {
           <View style={[styles.typeToggle, { backgroundColor: colors.surface }]}>
             {TYPES.map((t) => {
               const active = form.type === t.value;
-              const tint = active ? '#fff' : colors.muted;
+              const tint = active ? colors.onAccent : colors.muted;
               return (
                 <TouchableOpacity
                   key={t.value}
@@ -302,10 +296,12 @@ export default function CategoryScreen() {
               <Text style={[styles.addSubText, { color: colors.accent }]}>Add subcategory</Text>
             </TouchableOpacity>
           </View>
-          <AppButton onPress={handleSave} loading={saving} fullWidth style={{ marginTop: 8 }}>
+        </ScrollView>
+        <View style={[styles.footer, { backgroundColor: colors.surface, borderTopColor: colors.border, paddingBottom: bottom + 12 }]}>
+          <AppButton onPress={handleSave} loading={saving} fullWidth>
             {isNew ? 'Add category' : 'Save changes'}
           </AppButton>
-        </ScrollView>
+        </View>
 
       </KeyboardAvoidingView>
 
@@ -323,16 +319,8 @@ export default function CategoryScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-  },
-  headerTitle: { fontSize: 17, fontFamily: 'Lora_700Bold' },
-  content: { padding: 16, paddingBottom: 24, gap: 10 },
+  footer: { paddingHorizontal: 16, paddingTop: 12, borderTopWidth: 1 },
+  content: { padding: 16, gap: 12 },
   card: {
     borderWidth: 1,
     borderRadius: radius.xl,
@@ -344,7 +332,7 @@ const styles = StyleSheet.create({
   },
   iconNameRow: { flexDirection: 'row', gap: 12 },
   iconCol: { alignItems: 'center' },
-  fieldLabel: { fontSize: 13, fontFamily: 'Nunito_700Bold', marginBottom: 6 },
+  fieldLabel: { fontSize: 13, fontFamily: 'Nunito_700Bold', marginBottom: 8 },
   iconTile: {
     width: 64,
     height: 64,
@@ -359,7 +347,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginTop: 14,
+    marginTop: 16,
     paddingTop: 12,
     borderTopWidth: 1,
     borderStyle: 'dashed',
@@ -367,7 +355,7 @@ const styles = StyleSheet.create({
   summaryDot: { width: 10, height: 10, borderRadius: 5 },
   summaryText: { fontSize: 13, fontFamily: 'Nunito_600SemiBold' },
   sectionLabel: {
-    marginTop: 14,
+    marginTop: 16,
     fontSize: 11,
     fontFamily: 'Nunito_700Bold',
     letterSpacing: 0.5,
@@ -375,18 +363,18 @@ const styles = StyleSheet.create({
   },
   sectionHead: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
   sectionCount: { fontSize: 11, fontFamily: 'Nunito_700Bold' },
-  typeToggle: { flexDirection: 'row', borderRadius: 12, overflow: 'hidden', padding: 4, gap: 4 },
+  typeToggle: { flexDirection: 'row', borderRadius: 14, overflow: 'hidden', padding: 4, gap: 4 },
   typeBtn: {
     flex: 1,
     flexDirection: 'row',
-    gap: 6,
+    gap: 8,
     paddingVertical: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
+    borderRadius: 10,
   },
-  typeBtnText: { fontSize: 14, fontFamily: 'Nunito_600SemiBold' },
-  colorCard: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: 8, paddingVertical: 14 },
+  typeBtnText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
+  colorCard: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: 8, paddingVertical: 16 },
   swatchWrap: {
     width: 46,
     height: 46,
@@ -402,8 +390,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     borderBottomWidth: 1,
   },
   subIcon: {
@@ -415,10 +403,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     padding: 0,
   },
-  subName: { flex: 1, fontSize: 16, fontFamily: 'Nunito_600SemiBold', paddingVertical: 8 },
+  subName: { flex: 1, fontSize: 15, fontFamily: 'Nunito_600SemiBold', paddingVertical: 8 },
   addSubBtn: {
     flexDirection: 'row',
-    gap: 6,
+    gap: 8,
     alignItems: 'center',
     justifyContent: 'center',
     height: 52,

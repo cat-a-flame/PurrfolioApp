@@ -13,7 +13,7 @@ export default function AboutScreen() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <AppHeader title="About" showBack />
+      <AppHeader title="About" leading="back" />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.hero}>
           <Image source={require('../../assets/icon.png')} style={styles.icon} accessibilityLabel="Purrfolio app icon" />
@@ -52,11 +52,11 @@ const styles = StyleSheet.create({
   safe: { flex: 1 },
   container: { paddingHorizontal: 16, paddingBottom: 24, gap: 20 },
   hero: { alignItems: 'center', gap: 8, paddingVertical: 16 },
-  icon: { width: 88, height: 88, borderRadius: 24 },
+  icon: { width: 88, height: 88, borderRadius: 26 },
   appName: { fontSize: 24, fontFamily: 'Lora_700Bold', letterSpacing: -0.4 },
   version: { fontSize: 13, fontFamily: 'Nunito_600SemiBold' },
-  story: { borderRadius: 20, borderWidth: 1, padding: 18, gap: 8 },
+  story: { borderRadius: 18, borderWidth: 1, padding: 20, gap: 8 },
   storyTitle: { fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
-  storyBody: { fontSize: 14, fontFamily: 'Nunito_400Regular', lineHeight: 22 },
+  storyBody: { fontSize: 15, fontFamily: 'Nunito_400Regular', lineHeight: 22 },
   footer: { textAlign: 'center', fontSize: 12, fontFamily: 'Nunito_400Regular', lineHeight: 20 },
 });

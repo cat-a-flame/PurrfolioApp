@@ -64,7 +64,7 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <AppHeader title="Settings" />
+      <AppHeader title="Settings" leading="back" />
       <ScrollView contentContainerStyle={styles.container}>
 
         {sections.map((section) => (
@@ -132,8 +132,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
   },
-  rowLabel: { fontFamily: 'Nunito_400Regular', fontSize: 16 },
+  rowLabel: { fontFamily: 'Nunito_400Regular', fontSize: 15 },
   divider: { height: 1, marginHorizontal: 16 },
 });
