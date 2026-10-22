@@ -12,8 +12,8 @@ export default function ThemedText({ variant = 'body', style, ...props }: Props)
     body: { color: colors.text, fontFamily: 'Nunito_400Regular', fontSize: 15 },
     heading: { color: colors.text, fontSize: 20, fontFamily: 'Lora_700Bold' },
     caption: { color: colors.muted, fontFamily: 'Nunito_400Regular', fontSize: 12 },
-    muted: { color: colors.muted, fontFamily: 'Nunito_400Regular', fontSize: 14 },
-    label: { color: colors.muted, fontSize: 13, fontFamily: 'Nunito_500Medium' },
+    muted: { color: colors.muted, fontFamily: 'Nunito_400Regular', fontSize: 15 },
+    label: { color: colors.muted, fontSize: 13, fontFamily: 'Nunito_600SemiBold' },
   }[variant];
 
   return <Text style={[variantStyle, style]} {...props} />;

@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: 'Lora_700Bold',
     letterSpacing: -0.4,
   },

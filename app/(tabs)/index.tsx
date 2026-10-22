@@ -308,17 +308,17 @@ export default function DashboardScreen() {
                 <View style={{ flexShrink: 1, gap: 2 }}>
                   <Text style={styles.cashFlowPeriod}>{period.label}</Text>
                   {loading
-                    ? <SkeletonBox style={{ height: 38, width: 170, borderRadius: 8, backgroundColor: '#ffffff30' }} />
+                    ? <SkeletonBox style={{ height: 38, width: 170, borderRadius: 10, backgroundColor: '#ffffff30' }} />
                     : <Text style={styles.cashFlowNet} numberOfLines={1} adjustsFontSizeToFit>
                       {hideNumbers ? NUMBER_MASK : `${net >= 0 ? '+' : '−'}${formatCurrency(Math.abs(net), baseCurrency)}`}
                     </Text>
                   }
                 </View>
                 {!loading && vsPct !== null && (
-                  <View style={{ alignItems: 'flex-end', gap: 6 }}>
+                  <View style={{ alignItems: 'flex-end', gap: 8 }}>
                     <Text style={styles.vsLabel}>vs previous</Text>
                     <View style={[styles.vsBadge, vsPct >= 0 ? styles.vsBadgePos : styles.vsBadgeNeg]}>
-                      <Text style={[styles.vsText, { color: vsPct >= 0 ? '#c9ffe8' : '#ffe0e5' }]}>
+                      <Text style={[styles.vsText, { color: '#ffffff' }]}>
                         {hideNumbers ? NUMBER_MASK : `${vsPct >= 0 ? '↑' : '↓'} ${Math.abs(vsPct)}%`}
                       </Text>
                     </View>
@@ -368,22 +368,22 @@ export default function DashboardScreen() {
         }
         ListEmptyComponent={
           loading ? (
-            <View style={{ gap: 10, marginTop: 4 }}>
+            <View style={{ gap: 12, marginTop: 4 }}>
               {[3, 2, 2].map((count, gi) => (
                 <View key={gi}>
-                  <View style={[styles.dayHeader, { marginTop: 20, marginBottom: 10 }]}>
+                  <View style={[styles.dayHeader, { marginTop: 20, marginBottom: 12 }]}>
                     <SkeletonBox style={{ height: 13, width: 130, borderRadius: 4 }} />
                     <SkeletonBox style={{ height: 13, width: 65, borderRadius: 4 }} />
                   </View>
                   {Array.from({ length: count }).map((_, ri) => (
-                    <View key={ri} style={{ marginBottom: 6 }}>
+                    <View key={ri} style={{ marginBottom: 8 }}>
                       <View style={[styles.skeletonRow, { backgroundColor: colors.surface, borderColor: colors.border }]}>
                         <SkeletonBox style={{ width: 40, height: 40, borderRadius: 10 }} />
-                        <View style={{ flex: 1, gap: 7, paddingTop: 3 }}>
+                        <View style={{ flex: 1, gap: 8, paddingTop: 4 }}>
                           <SkeletonBox style={{ height: 13, width: `${50 + (ri * 13) % 25}%`, borderRadius: 4 }} />
                           <SkeletonBox style={{ height: 11, width: `${30 + (ri * 17) % 20}%`, borderRadius: 4 }} />
                         </View>
-                        <SkeletonBox style={{ height: 13, width: 68, borderRadius: 4, marginTop: 3 }} />
+                        <SkeletonBox style={{ height: 13, width: 68, borderRadius: 4, marginTop: 4 }} />
                       </View>
                     </View>
                   ))}
@@ -415,12 +415,12 @@ const styles = StyleSheet.create({
   cashFlow: {
     borderRadius: 26,
     overflow: 'hidden',
-    paddingHorizontal: 22,
+    paddingHorizontal: 24,
     paddingTop: 20,
     paddingBottom: 24,
     gap: 16,
     marginBottom: 8,
-    marginTop: 6,
+    marginTop: 8,
     shadowColor: '#5c22c8',
     shadowOffset: { width: 0, height: 18 },
     shadowOpacity: 0.45,
@@ -446,8 +446,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-start',
     gap: 8,
-    paddingVertical: 5,
-    paddingLeft: 10,
+    paddingVertical: 4,
+    paddingLeft: 12,
     paddingRight: 12,
     borderRadius: 9999,
     backgroundColor: 'rgba(255,255,255,0.14)',
@@ -464,9 +464,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 6,
   },
-  cashFlowTitle: { fontSize: 11, fontFamily: 'Nunito_800ExtraBold', textTransform: 'uppercase', letterSpacing: 1.3, color: '#fff' },
+  cashFlowTitle: { fontSize: 11, fontFamily: 'Nunito_800ExtraBold', textTransform: 'uppercase', letterSpacing: 1.2, color: '#fff' },
   cashFlowTop: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12 },
-  cashFlowPeriod: { fontSize: 13, fontFamily: 'Nunito_700Bold', color: 'rgba(255,255,255,0.82)' },
+  cashFlowPeriod: { fontSize: 13, fontFamily: 'Nunito_700Bold', color: '#ffffff' },
   cashFlowNet: {
     fontSize: 36,
     fontFamily: 'Nunito_900Black',
@@ -476,10 +476,10 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 6 },
     textShadowRadius: 18,
   },
-  cashFlowLabel: { fontSize: 14, fontFamily: 'Nunito_700Bold', color: 'rgba(255,255,255,0.9)' },
-  cashFlowValue: { fontSize: 14, fontFamily: 'Nunito_800ExtraBold', color: '#fff' },
-  vsLabel: { fontSize: 12, fontFamily: 'Nunito_700Bold', color: 'rgba(255,255,255,0.82)' },
-  vsBadge: { paddingHorizontal: 12, paddingVertical: 5, borderRadius: 9999, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
+  cashFlowLabel: { fontSize: 15, fontFamily: 'Nunito_700Bold', color: '#ffffff' },
+  cashFlowValue: { fontSize: 15, fontFamily: 'Nunito_800ExtraBold', color: '#fff' },
+  vsLabel: { fontSize: 12, fontFamily: 'Nunito_700Bold', color: '#ffffff' },
+  vsBadge: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 9999, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
   vsBadgePos: { backgroundColor: 'rgba(124,245,196,0.2)' },
   vsBadgeNeg: { backgroundColor: 'rgba(255,120,140,0.22)' },
   vsText: { fontSize: 13, fontFamily: 'Nunito_800ExtraBold' },
@@ -506,8 +506,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 10,
     borderWidth: 1,
-    gap: 10,
+    gap: 12,
   },
 });

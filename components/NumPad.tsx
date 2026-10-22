@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   keyText: {
-    fontSize: 22,
-    fontFamily: 'Nunito_500Medium',
+    fontSize: 20,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });

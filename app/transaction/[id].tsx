@@ -15,6 +15,7 @@ import { useTheme } from '@/lib/theme';
 import { Events } from '@/lib/events';
 import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
+import AppHeader, { HeaderIconButton } from '@/components/AppHeader';
 import BottomModal from '@/components/BottomModal';
 import DatePickerModal from '@/components/DatePickerModal';
 import CategoryPickerModal from '@/components/CategoryPickerModal';
@@ -275,16 +276,11 @@ export default function EditTransactionScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      {/* Header */}
-      <View style={styles.headerBar}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn}>
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Edit transaction</Text>
-        <TouchableOpacity onPress={handleDelete} style={styles.headerBtnRight}>
-          <Ionicons name="trash-outline" size={22} color={colors.danger} />
-        </TouchableOpacity>
-      </View>
+      <AppHeader
+        title="Edit transaction"
+        leading="close"
+        rightAction={<HeaderIconButton icon="trash-outline" tone="danger" label="Delete transaction" onPress={handleDelete} />}
+      />
 
       {/* Scrollable form */}
       <ScrollView
@@ -322,7 +318,7 @@ export default function EditTransactionScreen() {
             <View style={styles.row}>
               <View style={{ flex: 1 }}>
                 <TouchableOpacity style={[styles.pickerBtn, { borderColor: errors.date ? colors.danger : colors.border, backgroundColor: colors.surface }]} onPress={() => setShowDatePicker(true)}>
-                  <Ionicons name="calendar" size={15} color={colors.muted} style={{ marginRight: 6 }} />
+                  <Ionicons name="calendar" size={15} color={colors.muted} style={{ marginRight: 8 }} />
                   <Text style={[styles.pickerBtnText, { color: form.date ? colors.text : colors.muted }]}>
                     {form.date || 'Select date…'}
                   </Text>
@@ -375,7 +371,7 @@ export default function EditTransactionScreen() {
                   ]}
                   onPress={() => { setField('type', t); setField('category_id', ''); }}
                 >
-                  <Text style={[styles.typeBtnText, { color: form.type === t ? '#fff' : colors.muted }]}>
+                  <Text style={[styles.typeBtnText, { color: form.type === t ? colors.onAccent : colors.muted }]}>
                     {t.charAt(0).toUpperCase() + t.slice(1)}
                   </Text>
                 </TouchableOpacity>
@@ -411,7 +407,7 @@ export default function EditTransactionScreen() {
             <View style={styles.row}>
               <View style={{ flex: 1 }}>
                 <TouchableOpacity style={[styles.pickerBtn, { borderColor: errors.date ? colors.danger : colors.border, backgroundColor: colors.surface }]} onPress={() => setShowDatePicker(true)}>
-                  <Ionicons name="calendar" size={15} color={colors.muted} style={{ marginRight: 6 }} />
+                  <Ionicons name="calendar" size={15} color={colors.muted} style={{ marginRight: 8 }} />
                   <Text style={[styles.pickerBtnText, { color: form.date ? colors.text : colors.muted }]}>
                     {form.date || 'Select date…'}
                   </Text>
@@ -555,32 +551,22 @@ export default function EditTransactionScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  headerBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  headerBtn: { width: 40, alignItems: 'flex-start', justifyContent: 'center' },
-  headerBtnRight: { width: 40, alignItems: 'flex-end', justifyContent: 'center' },
-  headerTitle: { fontSize: 17, fontFamily: 'Lora_700Bold' },
-  form: { padding: 16, gap: 14 },
-  error: { fontFamily: 'Nunito_400Regular', fontSize: 14, textAlign: 'center' },
+  form: { padding: 16, gap: 16 },
+  error: { fontFamily: 'Nunito_400Regular', fontSize: 15, textAlign: 'center' },
   transferBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 20,
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 18,
     borderWidth: 1,
   },
   transferBadgeText: { fontSize: 13, fontFamily: 'Nunito_600SemiBold' },
   typeToggle: {
     flexDirection: 'row',
-    borderRadius: 12,
+    borderRadius: 14,
     overflow: 'hidden',
     padding: 4,
     gap: 4,
@@ -589,7 +575,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 8,
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 10,
   },
   typeBtnText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
   amountSection: {
@@ -601,7 +587,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
     paddingVertical: 8,
-    gap: 6,
+    gap: 8,
   },
   amountText: {
     fontSize: 52,
@@ -611,26 +597,26 @@ const styles = StyleSheet.create({
   currencyLabel: {
     fontSize: 15,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   row: { flexDirection: 'row', gap: 8 },
   pickerBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: StyleSheet.hairlineWidth,
   },
-  pickerBtnText: { fontFamily: 'Nunito_400Regular', fontSize: 14, flex: 1 },
+  pickerBtnText: { fontFamily: 'Nunito_400Regular', fontSize: 15, flex: 1 },
   moreToggle: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
+    gap: 8,
     paddingVertical: 8,
   },
-  moreToggleText: { fontSize: 15, fontFamily: 'Nunito_500Medium' },
+  moreToggleText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
   bottomBlock: {
     borderTopWidth: StyleSheet.hairlineWidth,
   },
@@ -645,7 +631,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 4,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    gap: 10,
+    gap: 12,
   },
   modalRowIcon: { fontFamily: 'Nunito_400Regular', fontSize: 20, width: 28, textAlign: 'center' },
   modalRowText: { flex: 1, fontFamily: 'Nunito_400Regular', fontSize: 15 },

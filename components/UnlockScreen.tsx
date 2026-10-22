@@ -116,11 +116,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   appName: {
-    fontSize: 40,
+    fontSize: 36,
     fontFamily: 'Lora_700Bold',
     textAlign: 'center',
     marginTop: 72,
-    letterSpacing: 1,
+    letterSpacing: 1.2,
   },
   biometricCenter: {
     flex: 1,

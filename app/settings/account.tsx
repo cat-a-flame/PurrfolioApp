@@ -248,7 +248,7 @@ export default function AccountScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <AppHeader title="Profile" showBack />
+      <AppHeader title="Profile" leading="back" />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
 
         <View style={styles.hero}>
@@ -261,9 +261,9 @@ export default function AccountScreen() {
               style={[styles.photoBtn, { backgroundColor: colors.accent, borderColor: colors.bg }]}
             >
               {uploadingPhoto ? (
-                <ActivityIndicator size="small" color="#fff" />
+                <ActivityIndicator size="small" color={colors.onAccent} />
               ) : (
-                <Ionicons name="camera-outline" size={18} color="#fff" />
+                <Ionicons name="camera-outline" size={18} color={colors.onAccent} />
               )}
             </TouchableOpacity>
           </View>
@@ -401,8 +401,8 @@ export default function AccountScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   container: { paddingHorizontal: 16, paddingBottom: 40, gap: 20 },
-  hero: { alignItems: 'center', gap: 10, paddingVertical: 8 },
-  heroName: { fontSize: 20, fontFamily: 'Lora_700Bold', letterSpacing: -0.3 },
+  hero: { alignItems: 'center', gap: 12, paddingVertical: 8 },
+  heroName: { fontSize: 20, fontFamily: 'Lora_700Bold', letterSpacing: -0.2 },
   photoBtn: {
     position: 'absolute',
     right: -4,
@@ -414,6 +414,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  changeText: { fontSize: 14, fontFamily: 'Nunito_700Bold' },
+  changeText: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
   hint: { fontSize: 12, fontFamily: 'Nunito_400Regular' },
 });

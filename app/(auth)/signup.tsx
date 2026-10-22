@@ -160,11 +160,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 14,
     borderWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     minHeight: 48,
   },
-  passwordInput: { flex: 1, fontFamily: 'Nunito_500Medium', fontSize: 15, padding: 0 },
+  passwordInput: { flex: 1, fontFamily: 'Nunito_600SemiBold', fontSize: 15, padding: 0 },
   flex: { flex: 1 },
   container: {
     flexGrow: 1,
@@ -186,12 +186,12 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 72,
     height: 72,
-    borderRadius: 20,
+    borderRadius: 18,
     marginBottom: 8,
   },
   logo: {
     fontSize: 36,
-    letterSpacing: -0.7,
+    letterSpacing: -0.4,
     fontFamily: 'Lora_700Bold',
   },
   subtitle: {
@@ -211,16 +211,16 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   error: {
-    fontFamily: 'Nunito_400Regular', fontSize: 14,
+    fontFamily: 'Nunito_400Regular', fontSize: 15,
     textAlign: 'center',
   },
   link: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: 'Nunito_700Bold',
     textAlign: 'center',
   },
   successTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: 'Lora_700Bold',
     textAlign: 'center',
   },

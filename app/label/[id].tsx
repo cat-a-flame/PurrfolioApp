@@ -11,9 +11,9 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/lib/theme';
-import { Ionicons } from '@expo/vector-icons';
 import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
+import AppHeader, { HeaderIconButton } from '@/components/AppHeader';
 import ConfirmModal from '@/components/ConfirmModal';
 
 const LABEL_COLORS = [
@@ -75,25 +75,19 @@ export default function LabelScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <Ionicons name="arrow-back" size={24} color={colors.accent} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>
-          {isNew ? 'Add label' : 'Edit label'}
-        </Text>
-        {!isNew ? (
-          <TouchableOpacity onPress={() => setConfirmDelete(true)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Ionicons name="trash-outline" size={22} color={colors.danger} />
-          </TouchableOpacity>
-        ) : (
-          <View style={{ width: 24 }} />
-        )}
-      </View>
+      <AppHeader
+        title={isNew ? 'New label' : 'Edit label'}
+        leading="close"
+        rightAction={
+          !isNew ? (
+            <HeaderIconButton icon="trash-outline" tone="danger" label="Delete label" onPress={() => setConfirmDelete(true)} />
+          ) : undefined
+        }
+      />
 
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <ScrollView
-          contentContainerStyle={[styles.content, { paddingBottom: bottom + 32 }]}
+          contentContainerStyle={[styles.content, { paddingBottom: 24 }]}
           keyboardShouldPersistTaps="handled"
         >
           <AppInput label="Name" value={name} onChangeText={setName} placeholder="Label name" />
@@ -118,10 +112,12 @@ export default function LabelScreen() {
             </View>
           </View>
 
-          <AppButton onPress={handleSave} loading={saving} fullWidth style={{ marginTop: 8 }}>
-            Save
-          </AppButton>
         </ScrollView>
+        <View style={[styles.footer, { backgroundColor: colors.surface, borderTopColor: colors.border, paddingBottom: bottom + 12 }]}>
+          <AppButton onPress={handleSave} loading={saving} fullWidth>
+            {isNew ? 'Add label' : 'Save changes'}
+          </AppButton>
+        </View>
       </KeyboardAvoidingView>
 
       <ConfirmModal
@@ -138,19 +134,11 @@ export default function LabelScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-  },
-  headerTitle: { fontSize: 17, fontFamily: 'Lora_700Bold' },
-  content: { padding: 16, gap: 14 },
+  footer: { paddingHorizontal: 16, paddingTop: 12, borderTopWidth: 1 },
+  content: { padding: 16, gap: 16 },
   fieldGroup: { gap: 8 },
-  fieldLabel: { fontSize: 13, fontFamily: 'Nunito_500Medium' },
-  colorRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  fieldLabel: { fontSize: 13, fontFamily: 'Nunito_600SemiBold' },
+  colorRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   colorSwatch: { width: 32, height: 32, borderRadius: 16 },
   colorSwatchSelected: { borderWidth: 3 },
 });

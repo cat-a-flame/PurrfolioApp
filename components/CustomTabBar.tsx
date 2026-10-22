@@ -135,6 +135,9 @@ export default function CustomTabBar({ state, navigation }: TabBarProps) {
     transform: [{ translateY: tabBarHiddenProgress.value * (containerHeight + 24) }],
   }));
 
+  // Settings is a pushed page: no bottom navigation (after all hooks).
+  if (state.routes[state.index].name === 'settings') return null;
+
   return (
     <Animated.View
       style={[styles.container, { height: containerHeight }, slideStyle]}
@@ -184,7 +187,7 @@ export default function CustomTabBar({ state, navigation }: TabBarProps) {
           accessibilityLabel="Add record"
           style={[styles.fab, { backgroundColor: colors.accent, shadowColor: colors.accent }]}
         >
-          <Ionicons name="add" size={28} color="#fff" />
+          <Ionicons name="add" size={28} color={colors.onAccent} />
         </TouchableOpacity>
       </View>
     </Animated.View>
@@ -224,7 +227,7 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 3,
+    gap: 4,
   },
   iconWrap: {
     alignItems: 'center',
@@ -242,7 +245,7 @@ const styles = StyleSheet.create({
     bottom: 6,
     width: 18,
     height: 3,
-    borderRadius: 2,
+    borderRadius: 4,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.8,
     shadowRadius: 6,

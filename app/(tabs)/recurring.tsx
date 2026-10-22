@@ -16,7 +16,7 @@ import { useHideTabBarOnScroll } from '@/lib/tabBarVisibility';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/lib/theme';
 import { useBaseCurrency } from '@/lib/baseCurrencyContext';
-import AppHeader from '@/components/AppHeader';
+import AppHeader, { HeaderIconButton } from '@/components/AppHeader';
 import { Ionicons } from '@expo/vector-icons';
 import type { RecurringPayment, RecurrenceFrequency, Wallet, Category } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils';
@@ -237,14 +237,7 @@ export default function RecurringScreen() {
       <AppHeader
         title="Planned"
         rightAction={
-          activeTab === 'recurring' ? (
-            <TouchableOpacity
-              onPress={() => router.push('/payment/add')}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="add-circle-outline" size={26} color={colors.accent} />
-            </TouchableOpacity>
-          ) : undefined
+          <HeaderIconButton icon="add" tone="accent" label="Add planned payment" onPress={() => router.push('/payment/add')} />
         }
       />
 
@@ -286,7 +279,7 @@ export default function RecurringScreen() {
           </View>
 
           {dueItems.length === 0 && (
-            <Text style={[styles.emptyText, { color: colors.muted, textAlign: 'center', marginTop: 10 }]}>
+            <Text style={[styles.emptyText, { color: colors.muted, textAlign: 'center', marginTop: 12 }]}>
               {payments.filter(p => p.is_active).length === 0
                 ? 'No recurring payments yet.'
                 : 'All payments for this period have been handled.'}
@@ -295,7 +288,7 @@ export default function RecurringScreen() {
 
           {overdueItems.length > 0 && (
             <>
-              <Text style={[styles.dueGroupLabel, { color: colors.danger, marginTop: 10 }]}>Overdue</Text>
+              <Text style={[styles.dueGroupLabel, { color: colors.danger, marginTop: 12 }]}>Overdue</Text>
               {overdueItems.map(({ payment, dueDate }) => {
                 const key = `${payment.id}|${isoDate(dueDate)}`;
                 return (
@@ -314,7 +307,7 @@ export default function RecurringScreen() {
 
           {todayItems.length > 0 && (
             <>
-              <Text style={[styles.dueGroupLabel, { color: colors.text, marginTop: 10 }]}>Today</Text>
+              <Text style={[styles.dueGroupLabel, { color: colors.text, marginTop: 12 }]}>Today</Text>
               {todayItems.map(({ payment, dueDate }) => {
                 const key = `${payment.id}|${isoDate(dueDate)}`;
                 return (
@@ -334,7 +327,7 @@ export default function RecurringScreen() {
           {upcomingItems.length > 0 && (
             <>
               {(overdueItems.length > 0 || todayItems.length > 0) && (
-                <Text style={[styles.dueGroupLabel, { color: colors.muted, marginTop: 10 }]}>Upcoming</Text>
+                <Text style={[styles.dueGroupLabel, { color: colors.muted, marginTop: 12 }]}>Upcoming</Text>
               )}
               {upcomingItems.map(({ payment, dueDate }) => {
                 const key = `${payment.id}|${isoDate(dueDate)}`;
@@ -437,7 +430,7 @@ function DueCard({
       activeOpacity={0.7}
     >
       <View style={styles.dueMeta}>
-        <View style={[styles.iconBox, { backgroundColor: '#fcf1ff' }]}>
+        <View style={[styles.iconBox, { backgroundColor: colors.accentLight }]}>
           {payment.category?.icon ? <Text style={styles.dueIcon}>{payment.category.icon}</Text> : null}
         </View>
         <View style={{ flex: 1 }}>
@@ -480,13 +473,13 @@ function SwipeableDueCard({
       overshootRight={false}
       overshootLeft={false}
       renderRightActions={(_, translation) => (
-        <SwipeAction translation={translation} style={{ backgroundColor: colors.income, marginLeft: 6 }}>
-          <Ionicons name="checkmark-circle-outline" size={26} color="#fff" />
-          <Text style={styles.swipeActionText}>Add</Text>
+        <SwipeAction translation={translation} style={{ backgroundColor: colors.income, marginLeft: 8 }}>
+          <Ionicons name="checkmark-circle-outline" size={26} color={colors.onAccent} />
+          <Text style={[styles.swipeActionText, { color: colors.onAccent }]}>Add</Text>
         </SwipeAction>
       )}
       renderLeftActions={(_, translation) => (
-        <SwipeAction translation={translation} style={{ backgroundColor: colors.border, marginRight: 6 }}>
+        <SwipeAction translation={translation} style={{ backgroundColor: colors.border, marginRight: 8 }}>
           <Ionicons name="close-circle-outline" size={26} color={colors.muted} />
           <Text style={[styles.swipeActionText, { color: colors.muted }]}>Skip</Text>
         </SwipeAction>
@@ -535,7 +528,7 @@ function PaymentRow({
       activeOpacity={0.7}
     >
       <View style={styles.dueMeta}>
-        <View style={[styles.iconBox, { backgroundColor: '#fcf1ff' }]}>
+        <View style={[styles.iconBox, { backgroundColor: colors.accentLight }]}>
           {payment.category?.icon ? <Text style={styles.dueIcon}>{payment.category.icon}</Text> : null}
         </View>
         <View style={{ flex: 1 }}>
@@ -554,19 +547,19 @@ function PaymentRow({
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  container: { paddingHorizontal: 16, gap: 10 },
+  container: { paddingHorizontal: 16, gap: 12 },
   tabStrip: { flexDirection: 'row', borderBottomWidth: StyleSheet.hairlineWidth },
   tabBtn: { flex: 1, alignItems: 'center', paddingVertical: 12 },
-  tabBtnText: { fontSize: 14, fontFamily: 'Nunito_600SemiBold' },
+  tabBtnText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
   monthNavRow: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    borderRadius: 12, borderWidth: 1, paddingHorizontal: 4, paddingVertical: 4,
+    borderRadius: 14, borderWidth: 1, paddingHorizontal: 4, paddingVertical: 4,
     marginBottom: 12,
   },
   monthNav: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   monthNavBtn: { padding: 8 },
-  monthLabel: { fontSize: 14, fontFamily: 'Nunito_600SemiBold', flex: 1, textAlign: 'center' },
-  emptyText: { fontFamily: 'Nunito_400Regular', fontSize: 14, paddingVertical: 8 },
+  monthLabel: { fontSize: 15, fontFamily: 'Nunito_600SemiBold', flex: 1, textAlign: 'center' },
+  emptyText: { fontFamily: 'Nunito_400Regular', fontSize: 15, paddingVertical: 8 },
   dueGroupLabel: {
     fontSize: 11,
     fontFamily: 'Nunito_700Bold',
@@ -581,15 +574,15 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginTop: 8,
-    marginBottom: 6,
+    marginBottom: 8,
   },
   dueCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderRadius: 18,
     paddingHorizontal: 12,
-    gap: 10,
+    gap: 12,
     marginBottom: 2,
   },
   iconBox: {
@@ -602,9 +595,9 @@ const styles = StyleSheet.create({
   },
   dueMeta: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 },
   dueIcon: { fontFamily: 'Nunito_400Regular', fontSize: 20 },
-  dueName: { fontSize: 14, fontFamily: 'Nunito_700Bold' },
+  dueName: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
   dueSub: { fontFamily: 'Nunito_400Regular', fontSize: 12, marginTop: 1 },
-  dueAmount: { fontSize: 14, fontFamily: 'Nunito_800ExtraBold' },
+  dueAmount: { fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
   swipeAction: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -613,22 +606,22 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     marginBottom: 2,
   },
-  swipeActionText: { fontSize: 11, fontFamily: 'Nunito_600SemiBold', color: '#fff' },
+  swipeActionText: { fontSize: 11, fontFamily: 'Nunito_600SemiBold' },
 
   paymentGroup: {
-    borderRadius: 12, borderWidth: 1, overflow: 'hidden',
+    borderRadius: 14, borderWidth: 1, overflow: 'hidden',
   },
   paymentRow: {
     flexDirection: 'row', alignItems: 'center',
-    paddingVertical: 10, paddingHorizontal: 12,
-    borderTopWidth: StyleSheet.hairlineWidth, gap: 10,
+    paddingVertical: 12, paddingHorizontal: 12,
+    borderTopWidth: StyleSheet.hairlineWidth, gap: 12,
   },
   paymentIcon: {
-    width: 34, height: 34, borderRadius: 8,
+    width: 34, height: 34, borderRadius: 10,
     alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
   paymentDot: { width: 10, height: 10, borderRadius: 5 },
-  paymentName: { fontSize: 14, fontFamily: 'Nunito_700Bold' },
+  paymentName: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
   paymentSub: { fontFamily: 'Nunito_400Regular', fontSize: 12, marginTop: 1 },
-  paymentAmount: { fontSize: 14, fontFamily: 'Nunito_800ExtraBold' },
+  paymentAmount: { fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
 });

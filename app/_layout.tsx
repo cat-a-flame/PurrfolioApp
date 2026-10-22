@@ -9,8 +9,8 @@ import { loadThemePreference, useDarkMode } from '@/lib/theme';
 import type { Session } from '@supabase/supabase-js';
 import { useRouter, useSegments } from 'expo-router';
 import { useFonts } from 'expo-font';
-import { Nunito_400Regular, Nunito_500Medium, Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold, Nunito_900Black } from '@expo-google-fonts/nunito';
-import { Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
+import { Nunito_400Regular, Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold, Nunito_900Black } from '@expo-google-fonts/nunito';
+import { Lora_400Regular, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { UnlockScreen } from '@/components/UnlockScreen';
@@ -47,13 +47,11 @@ export default function RootLayout() {
 
   const [fontsLoaded] = useFonts({
     Nunito_400Regular,
-    Nunito_500Medium,
     Nunito_600SemiBold,
     Nunito_700Bold,
     Nunito_800ExtraBold,
     Nunito_900Black,
     Lora_400Regular,
-    Lora_600SemiBold,
     Lora_700Bold,
   });
 

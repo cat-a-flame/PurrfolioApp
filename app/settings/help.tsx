@@ -12,7 +12,7 @@ export default function HelpScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <AppHeader title="Help & about" showBack />
+      <AppHeader title="Help & about" leading="back" />
       <ScrollView contentContainerStyle={styles.container}>
         <View>
           <SectionLabel>Support</SectionLabel>

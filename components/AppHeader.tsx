@@ -21,13 +21,42 @@ import { useTheme, useDarkMode } from '@/lib/theme';
 interface Props {
   title: string;
   rightAction?: ReactNode;
+  /** menu (default) opens the drawer; back / close call onBack ?? router.back() */
+  leading?: 'menu' | 'back' | 'close';
+  /** Alias for leading="back" */
   showBack?: boolean;
   onBack?: () => void;
 }
 
+type HeaderIconButtonProps = {
+  icon: keyof typeof Ionicons.glyphMap;
+  onPress: () => void;
+  label: string;
+  tone?: 'default' | 'accent' | 'danger';
+};
+
+// Same 38×38 square as the leading button, for header actions.
+export function HeaderIconButton({ icon, onPress, label, tone = 'default' }: HeaderIconButtonProps) {
+  const colors = useTheme();
+  const iconColor = tone === 'accent' ? colors.accent : tone === 'danger' ? colors.danger : colors.text;
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.7}
+      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      style={[styles.iconBtn, { backgroundColor: colors.glassStrong, borderColor: colors.border, shadowColor: colors.shadow }]}
+    >
+      <Ionicons name={icon} size={20} color={iconColor} />
+    </TouchableOpacity>
+  );
+}
+
 const DRAWER_WIDTH = Math.min(300, Dimensions.get('window').width * 0.8);
 
-export default function AppHeader({ title, rightAction, showBack, onBack }: Props) {
+export default function AppHeader({ title, rightAction, leading, showBack, onBack }: Props) {
+  const lead = leading ?? (showBack ? 'back' : 'menu');
   const colors = useTheme();
   const { isDark, setIsDark } = useDarkMode();
   const router = useRouter();
@@ -87,16 +116,22 @@ export default function AppHeader({ title, rightAction, showBack, onBack }: Prop
       <View style={styles.bar}>
         <View style={styles.side}>
           <TouchableOpacity
-            onPress={showBack ? (onBack ?? (() => router.back())) : openDrawer}
+            onPress={lead === 'menu' ? openDrawer : (onBack ?? (() => router.back()))}
             activeOpacity={0.7}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            accessibilityLabel={showBack ? 'Back' : 'Open menu'}
+            accessibilityRole="button"
+            accessibilityLabel={lead === 'back' ? 'Back' : lead === 'close' ? 'Close' : 'Open menu'}
             style={[styles.iconBtn, { backgroundColor: colors.glassStrong, borderColor: colors.border, shadowColor: colors.shadow }]}
           >
-            <Ionicons name={showBack ? 'arrow-back' : 'menu'} size={20} color={showBack ? colors.accent : colors.text} />
+            <Ionicons name={lead === 'back' ? 'arrow-back' : lead === 'close' ? 'close' : 'menu'} size={20} color={colors.text} />
           </TouchableOpacity>
         </View>
-        <Text style={[styles.barTitle, { color: colors.heading }]} numberOfLines={1}>{title}</Text>
+        <Text
+          style={[styles.barTitle, { color: colors.heading }]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.8}
+        >{title}</Text>
         <View style={[styles.side, styles.sideRight]}>
           {rightAction ?? null}
         </View>
@@ -214,7 +249,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 1,
   },
-  barTitle: { flex: 1, textAlign: 'center', fontSize: 24, fontFamily: 'Lora_700Bold', letterSpacing: -0.5 },
+  barTitle: { flex: 1, textAlign: 'center', fontSize: 24, fontFamily: 'Lora_700Bold', letterSpacing: -0.4 },
 
   drawerRow: { flex: 1, flexDirection: 'row' },
   drawer: {
@@ -242,7 +277,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 18,
   },
   userName: { flexShrink: 1, fontSize: 15, fontFamily: 'Nunito_800ExtraBold' },
   userEmail: { flexShrink: 1, fontSize: 12, fontFamily: 'Nunito_400Regular', marginTop: 2 },
@@ -259,13 +294,13 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    gap: 16,
     minHeight: 48,
     paddingHorizontal: 24,
   },
   rowText: { flex: 1, fontSize: 15, fontFamily: 'Nunito_700Bold' },
   divider: { height: StyleSheet.hairlineWidth, marginHorizontal: 24, marginTop: 8 },
 
-  version: { fontSize: 12, fontFamily: 'Nunito_600SemiBold', paddingHorizontal: 24, paddingBottom: 10 },
+  version: { fontSize: 12, fontFamily: 'Nunito_600SemiBold', paddingHorizontal: 24, paddingBottom: 12 },
   footer: { paddingTop: 8 },
 });

@@ -199,7 +199,7 @@ export default function PeriodPicker({ value, onChange }: Props) {
                         ]}
                         onPress={() => selectMonth(viewYear, i)}
                       >
-                        <Text style={[s.cellText, { color: sel ? '#fff' : colors.text }]}>{m}</Text>
+                        <Text style={[s.cellText, { color: sel ? colors.onAccent : colors.text }]}>{m}</Text>
                       </TouchableOpacity>
                     );
                   })}
@@ -249,7 +249,7 @@ export default function PeriodPicker({ value, onChange }: Props) {
                           <View key={d} style={[s.weekDay, today && { backgroundColor: colors.accent }]}>
                             <Text style={[
                               s.weekDayText,
-                              { color: today ? '#fff' : out ? colors.muted : colors.text },
+                              { color: today ? colors.onAccent : out ? colors.muted : colors.text },
                             ]}>
                               {day.getDate()}
                             </Text>
@@ -288,7 +288,7 @@ export default function PeriodPicker({ value, onChange }: Props) {
                         ]}
                         onPress={() => selectYear(y)}
                       >
-                        <Text style={[s.cellText, { color: sel ? '#fff' : colors.text }]}>{y}</Text>
+                        <Text style={[s.cellText, { color: sel ? colors.onAccent : colors.text }]}>{y}</Text>
                       </TouchableOpacity>
                     );
                   })}
@@ -330,7 +330,7 @@ export default function PeriodPicker({ value, onChange }: Props) {
                   onPress={() => { if (cfrom && cto) emit(cfrom, cto, `${cfrom} – ${cto}`, 'custom'); }}
                   disabled={!cfrom || !cto}
                 >
-                  <Text style={s.applyBtnText}>Apply</Text>
+                  <Text style={[s.applyBtnText, { color: colors.onAccent }]}>Apply</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -359,12 +359,12 @@ function makeStyles(colors: any) {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      borderRadius: 12,
+      borderRadius: 14,
       borderWidth: 0,
       borderColor: colors.border,
       backgroundColor: colors.surface,
       paddingVertical: 8,
-      paddingHorizontal: 6,
+      paddingHorizontal: 8,
     },
     navBtn: { padding: 4 },
     labelBtn: { flexDirection: 'row', alignItems: 'center', gap: 2 },
@@ -376,8 +376,8 @@ function makeStyles(colors: any) {
       justifyContent: 'flex-end',
     },
     sheet: {
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
+      borderTopLeftRadius: 18,
+      borderTopRightRadius: 18,
       paddingBottom: 32,
     },
 
@@ -389,7 +389,7 @@ function makeStyles(colors: any) {
     tabBtn: {
       flex: 1,
       alignItems: 'center',
-      paddingVertical: 14,
+      paddingVertical: 16,
       borderBottomWidth: 2,
       borderBottomColor: 'transparent',
     },
@@ -411,11 +411,11 @@ function makeStyles(colors: any) {
     },
     cell: {
       width: '30%',
-      paddingVertical: 10,
+      paddingVertical: 12,
       alignItems: 'center',
       borderRadius: 10,
     },
-    cellText: { fontSize: 14, fontFamily: 'Nunito_500Medium' },
+    cellText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
 
     weekDayHeaders: {
       flexDirection: 'row',
@@ -429,36 +429,36 @@ function makeStyles(colors: any) {
     },
     weekRow: {
       flexDirection: 'row',
-      borderRadius: 8,
+      borderRadius: 10,
       paddingVertical: 4,
     },
     weekDay: {
       flex: 1,
       alignItems: 'center',
-      paddingVertical: 6,
-      borderRadius: 16,
+      paddingVertical: 8,
+      borderRadius: 14,
     },
     weekDayText: { fontFamily: 'Nunito_400Regular', fontSize: 13 },
 
     customFields: { flexDirection: 'row', gap: 12 },
-    customField: { flex: 1, gap: 6 },
+    customField: { flex: 1, gap: 8 },
     customLabel: { fontSize: 12, fontFamily: 'Nunito_600SemiBold' },
     customDateBtn: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       borderWidth: 1,
-      borderRadius: 8,
-      paddingHorizontal: 10,
-      paddingVertical: 10,
+      borderRadius: 10,
+      paddingHorizontal: 12,
+      paddingVertical: 12,
     },
-    customDateText: { fontSize: 14, fontFamily: 'Nunito_500Medium' },
+    customDateText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
     applyBtn: {
       paddingVertical: 12,
       borderRadius: 10,
       alignItems: 'center',
       marginTop: 4,
     },
-    applyBtnText: { color: '#fff', fontFamily: 'Nunito_700Bold', fontSize: 15 },
+    applyBtnText: { fontFamily: 'Nunito_700Bold', fontSize: 15 },
   });
 }

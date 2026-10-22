@@ -71,23 +71,23 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontFamily: 'Lora_700Bold',
-    letterSpacing: -0.3,
+    letterSpacing: -0.2,
     textAlign: 'center',
   },
   body: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: 'Nunito_400Regular',
     textAlign: 'center',
     lineHeight: 20,
   },
   buttons: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 12,
     marginTop: 4,
   },
   btn: {
     flex: 1,
-    paddingVertical: 13,
+    paddingVertical: 12,
     borderRadius: 9999,
     borderWidth: 1,
     alignItems: 'center',

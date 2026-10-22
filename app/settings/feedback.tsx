@@ -59,7 +59,7 @@ export default function FeedbackScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      <AppHeader title="Feedback" showBack />
+      <AppHeader title="Feedback" leading="back" />
       <KeyboardAwareScroll contentContainerStyle={styles.container}>
         <Text style={[styles.intro, { color: colors.muted }]}>
           Found a bug, have an idea or a question? Every message is read during the beta.
@@ -134,15 +134,15 @@ export default function FeedbackScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  container: { paddingHorizontal: 16, paddingBottom: 40, gap: 18 },
-  intro: { fontSize: 14, fontFamily: 'Nunito_400Regular', lineHeight: 21, paddingHorizontal: 4 },
+  container: { paddingHorizontal: 16, paddingBottom: 40, gap: 20 },
+  intro: { fontSize: 15, fontFamily: 'Nunito_400Regular', lineHeight: 21, paddingHorizontal: 4 },
   group: { gap: 8 },
   label: { fontSize: 13, fontFamily: 'Nunito_700Bold', paddingHorizontal: 4 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: { minHeight: 44, paddingHorizontal: 16, borderRadius: 22, borderWidth: 1, justifyContent: 'center' },
-  chipText: { fontSize: 14, fontFamily: 'Nunito_700Bold' },
+  chipText: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
   textarea: { minHeight: 160, paddingTop: 12 },
-  switchRow: { flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 20, borderWidth: 1, padding: 16 },
+  switchRow: { flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 18, borderWidth: 1, padding: 16 },
   switchTitle: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
   hint: { fontSize: 12, fontFamily: 'Nunito_400Regular', lineHeight: 17 },
   note: { flexDirection: 'row', gap: 8, alignItems: 'flex-start', paddingHorizontal: 4 },

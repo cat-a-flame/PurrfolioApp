@@ -124,7 +124,7 @@ export default function NetWorthCard({ summaries, rates, loading }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    gap: 14,
+    gap: 16,
     borderRadius: 26,
     borderWidth: 1,
     padding: 16,
@@ -133,9 +133,9 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
     elevation: 3,
   },
-  header: { flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', gap: 10 },
+  header: { flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', gap: 12 },
   headerLabel: { fontSize: 15, fontFamily: 'Nunito_700Bold' },
-  headerValue: { flexShrink: 1, fontSize: 16, fontFamily: 'Nunito_900Black', letterSpacing: -0.2 },
+  headerValue: { flexShrink: 1, fontSize: 15, fontFamily: 'Nunito_900Black', letterSpacing: -0.2 },
   bar: { flexDirection: 'row', gap: 4, height: 6 },
   segment: { flexBasis: 0, minWidth: 6, borderRadius: 3 },
   group: { gap: 12, borderWidth: 1, borderRadius: 18, paddingVertical: 12, paddingHorizontal: 16 },

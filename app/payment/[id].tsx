@@ -13,6 +13,7 @@ import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/lib/theme';
 import AppInput from '@/components/AppInput';
 import AppButton from '@/components/AppButton';
+import AppHeader, { HeaderIconButton } from '@/components/AppHeader';
 import NumPad from '@/components/NumPad';
 import BottomModal from '@/components/BottomModal';
 import DatePickerModal from '@/components/DatePickerModal';
@@ -301,38 +302,35 @@ export default function EditPaymentScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: colors.bg }]}>
-      {/* Header */}
-      <View style={[styles.headerBar, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn}>
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Edit recurring payment</Text>
-        <View>
-          <TouchableOpacity onPress={() => setShowDotMenu((v) => !v)} style={styles.headerBtnRight}>
-            <Ionicons name="ellipsis-vertical" size={22} color={colors.text} />
-          </TouchableOpacity>
-          {showDotMenu && (
-            <View style={[styles.dotMenu, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-              <TouchableOpacity
-                style={[styles.dotMenuItem, { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border }]}
-                onPress={() => setConfirmKind('pause')}
-              >
-                <Ionicons name={isActive ? 'pause-outline' : 'play-outline'} size={18} color={colors.text} />
-                <Text style={[styles.dotMenuText, { color: colors.text }]}>
-                  {isActive ? 'Pause' : 'Resume'}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.dotMenuItem}
-                onPress={() => setConfirmKind('delete')}
-              >
-                <Ionicons name="trash-outline" size={18} color={colors.danger} />
-                <Text style={[styles.dotMenuText, { color: colors.danger }]}>Delete</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-      </View>
+      <AppHeader
+        title="Edit planned payment"
+        leading="close"
+        rightAction={
+          <View>
+            <HeaderIconButton icon="ellipsis-vertical" label="More actions" onPress={() => setShowDotMenu((v) => !v)} />
+            {showDotMenu && (
+              <View style={[styles.dotMenu, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                <TouchableOpacity
+                  style={[styles.dotMenuItem, { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border }]}
+                  onPress={() => setConfirmKind('pause')}
+                >
+                  <Ionicons name={isActive ? 'pause-outline' : 'play-outline'} size={18} color={colors.text} />
+                  <Text style={[styles.dotMenuText, { color: colors.text }]}>
+                    {isActive ? 'Pause' : 'Resume'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.dotMenuItem}
+                  onPress={() => setConfirmKind('delete')}
+                >
+                  <Ionicons name="trash-outline" size={18} color={colors.danger} />
+                  <Text style={[styles.dotMenuText, { color: colors.danger }]}>Delete</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        }
+      />
 
       <View style={{ flex: 1 }}>
         <ScrollView
@@ -353,7 +351,7 @@ export default function EditPaymentScreen() {
                 ]}
                 onPress={() => { setField('type', t); setField('category_id', ''); }}
               >
-                <Text style={[styles.typeBtnText, { color: form.type === t ? '#fff' : colors.muted }]}>
+                <Text style={[styles.typeBtnText, { color: form.type === t ? colors.onAccent : colors.muted }]}>
                   {t === 'expense' ? 'Expense' : 'Income'}
                 </Text>
               </TouchableOpacity>
@@ -646,53 +644,46 @@ export default function EditPaymentScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  headerBar: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1,
-  },
-  headerBtn: { width: 40, alignItems: 'flex-start', justifyContent: 'center' },
-  headerBtnRight: { width: 40, alignItems: 'flex-end', justifyContent: 'center' },
-  headerTitle: { fontSize: 17, fontFamily: 'Lora_700Bold' },
   form: { padding: 16, gap: 16 },
   bottomBlock: { borderTopWidth: StyleSheet.hairlineWidth },
   saveRow: { paddingHorizontal: 12, paddingTop: 8, paddingBottom: 4 },
-  error: { fontFamily: 'Nunito_400Regular', fontSize: 14, textAlign: 'center' },
+  error: { fontFamily: 'Nunito_400Regular', fontSize: 15, textAlign: 'center' },
 
   typeToggle: {
-    flexDirection: 'row', borderRadius: 12, borderWidth: 1,
+    flexDirection: 'row', borderRadius: 14, borderWidth: 1,
     overflow: 'hidden', padding: 4, gap: 4,
   },
-  typeBtn: { flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 8 },
+  typeBtn: { flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 10 },
   typeBtnText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
 
   amountSection: { alignItems: 'center', gap: 4 },
   amountDisplay: {
     flexDirection: 'row', alignItems: 'flex-end',
-    justifyContent: 'center', paddingVertical: 8, gap: 6,
+    justifyContent: 'center', paddingVertical: 8, gap: 8,
   },
   amountText: { fontSize: 52, fontFamily: 'Lora_400Regular', paddingVertical: 0 },
-  currencyLabel: { fontSize: 15, fontFamily: 'Nunito_700Bold', marginBottom: 10 },
+  currencyLabel: { fontSize: 15, fontFamily: 'Nunito_700Bold', marginBottom: 12 },
 
   row: { flexDirection: 'row', gap: 8 },
 
   fieldGroup: { gap: 8 },
-  fieldLabel: { fontSize: 12, fontFamily: 'Nunito_500Medium', marginBottom: 4 },
+  fieldLabel: { fontSize: 12, fontFamily: 'Nunito_600SemiBold', marginBottom: 4 },
   pickerBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 14, paddingVertical: 12, borderRadius: 12, borderWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 16, paddingVertical: 12, borderRadius: 14, borderWidth: StyleSheet.hairlineWidth,
   },
-  pickerBtnText: { fontFamily: 'Nunito_400Regular', fontSize: 14, flex: 1 },
+  pickerBtnText: { fontFamily: 'Nunito_400Regular', fontSize: 15, flex: 1 },
 
   moreToggle: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 6, paddingVertical: 10, borderRadius: 10, borderWidth: 1, borderStyle: 'dashed',
+    gap: 8, paddingVertical: 12, borderRadius: 10, borderWidth: 1, borderStyle: 'dashed',
   },
-  moreToggleText: { fontSize: 14, fontFamily: 'Nunito_500Medium' },
+  moreToggleText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
   clearText: { fontFamily: 'Nunito_400Regular', fontSize: 13, textAlign: 'right' },
 
   dotMenu: {
     position: 'absolute',
-    top: 36,
+    top: 44,
     right: 0,
     borderRadius: 10,
     borderWidth: 1,
@@ -707,16 +698,16 @@ const styles = StyleSheet.create({
   dotMenuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 14,
+    gap: 12,
+    paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  dotMenuText: { fontSize: 15, fontFamily: 'Nunito_500Medium' },
+  dotMenuText: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
 
   modalRow: {
     flexDirection: 'row', alignItems: 'center',
     paddingVertical: 12, paddingHorizontal: 4,
-    borderBottomWidth: StyleSheet.hairlineWidth, gap: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth, gap: 12,
   },
   modalRowIcon: { fontFamily: 'Nunito_400Regular', fontSize: 20, width: 28, textAlign: 'center' },
   modalRowText: { flex: 1, fontFamily: 'Nunito_400Regular', fontSize: 15 },

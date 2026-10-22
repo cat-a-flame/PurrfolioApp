@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 18,
     borderWidth: 1,
-    gap: 10,
+    gap: 12,
   },
   iconBox: {
     width: 40,
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   icon: { fontFamily: 'Nunito_400Regular', fontSize: 20 },
-  iconFallback: { fontSize: 16, fontFamily: 'Nunito_600SemiBold' },
+  iconFallback: { fontSize: 15, fontFamily: 'Nunito_600SemiBold' },
   info: {
     flex: 1,
     gap: 2,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 8,
   },
   labelText: {
     fontFamily: 'Nunito_400Regular', fontSize: 13,
@@ -142,13 +142,13 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 4,
   },
   walletLabelRow: {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    columnGap: 5,
+    columnGap: 4,
     alignItems: 'center',
 }
 });
