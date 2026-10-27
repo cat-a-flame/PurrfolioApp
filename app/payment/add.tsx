@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  Switch,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useNavigation } from 'expo-router';
@@ -45,13 +46,14 @@ type EditForm = {
   end_date: string;
   payer: string;
   notes: string;
+  auto_add: boolean;
   labelIds: string[];
 };
 
 const EMPTY_FORM: EditForm = {
   name: '', type: 'expense', amount: '', wallet_id: '', category_id: '',
   frequency: 'monthly', start_date: isoDate(new Date()), end_date: '', payer: '', notes: '',
-  labelIds: [],
+  auto_add: false, labelIds: [],
 };
 
 export default function AddPaymentScreen() {
@@ -180,6 +182,7 @@ export default function AddPaymentScreen() {
         end_date: form.end_date || null,
         payer: form.payer.trim() || null,
         notes: form.notes || null,
+        auto_add: form.auto_add,
       })
       .select('id')
       .single();
@@ -317,6 +320,21 @@ export default function AddPaymentScreen() {
                 <Ionicons name="chevron-forward" size={16} color={colors.muted} />
               </TouchableOpacity>
             </View>
+          </View>
+
+          <View style={[styles.row, { justifyContent: 'space-between', alignItems: 'center', gap: 12 }]}>
+            <View style={{ flex: 1, gap: 2 }}>
+              <Text style={[styles.fieldLabel, { color: colors.muted, marginBottom: 0 }]}>Add automatically</Text>
+              <Text style={{ fontSize: 12, fontFamily: 'Nunito_600SemiBold', color: colors.muted }}>
+                Record this payment on its due date without asking
+              </Text>
+            </View>
+            <Switch
+              value={form.auto_add}
+              onValueChange={(v) => setField('auto_add', v)}
+              trackColor={{ true: colors.accent }}
+              thumbColor="#fff"
+            />
           </View>
 
           {/* More options */}
