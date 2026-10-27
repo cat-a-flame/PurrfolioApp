@@ -72,6 +72,14 @@ export default function OnboardingScreen() {
       return;
     }
 
+    // Best-effort: a missing Pets category shouldn't block onboarding.
+    const { data: pets } = await supabase.from('categories').select('id').eq('name', 'Pets').is('parent_id', null).limit(1);
+    if (!pets?.length) {
+      await supabase.from('categories').insert({
+        user_id: user.id, name: 'Pets', type: 'expense', icon: '🐾', color: '#f59e0b', is_default: true, parent_id: null,
+      });
+    }
+
     if (!(await setBaseCurrency(currency))) {
       setError('Could not save your base currency. Please try again.');
       setSaving(false);
