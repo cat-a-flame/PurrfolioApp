@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from './supabase';
 import { generateDueDates, isoDate } from './recurringUtils';
+import { autoAddDuePayments } from './autoAddPayments';
 
 type RecurringContextType = {
   hasDueToday: boolean;
@@ -20,6 +21,8 @@ export function RecurringProvider({ children }: { children: React.ReactNode }) {
   const refreshDueToday = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
+
+    await autoAddDuePayments();
 
     const today = new Date();
     const todayStr = isoDate(today);
