@@ -1,14 +1,17 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, Switch, StyleSheet, Alert, Linking } from 'react-native';
+import { View, Text, Switch, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from 'expo-router';
 import { useTheme } from '@/lib/theme';
 import AppHeader from '@/components/AppHeader';
+import TimePickerModal, { formatTime } from '@/components/TimePickerModal';
 import {
   isAutoPaymentNotificationEnabled,
   isDailyReminderEnabled,
   setAutoPaymentNotificationEnabled,
   setDailyReminderEnabled,
+  getDailyReminderTime,
+  setDailyReminderTime,
   requestNotificationPermission,
 } from '@/lib/notifications';
 
@@ -16,11 +19,18 @@ export default function NotificationsScreen() {
   const colors = useTheme();
   const [autoPayments, setAutoPayments] = useState(false);
   const [dailyReminder, setDailyReminder] = useState(false);
+  const [reminderTime, setReminderTime] = useState('20:00');
+  const [pickingTime, setPickingTime] = useState(false);
 
   useFocusEffect(useCallback(() => {
-    Promise.all([isAutoPaymentNotificationEnabled(), isDailyReminderEnabled()]).then(([a, d]) => {
+    Promise.all([
+      isAutoPaymentNotificationEnabled(),
+      isDailyReminderEnabled(),
+      getDailyReminderTime(),
+    ]).then(([a, d, t]) => {
       setAutoPayments(a);
       setDailyReminder(d);
+      setReminderTime(t);
     });
   }, []));
 
@@ -69,7 +79,7 @@ export default function NotificationsScreen() {
             <View style={{ flex: 1, paddingRight: 12 }}>
               <Text style={[styles.rowLabel, { color: colors.text }]}>Daily reminder</Text>
               <Text style={[styles.rowHint, { color: colors.muted }]}>
-                Remind me every day at 8:00 PM to log my expenses
+                Remind me every day to log my expenses
               </Text>
             </View>
             <Switch
@@ -79,8 +89,23 @@ export default function NotificationsScreen() {
               thumbColor="#fff"
             />
           </View>
+          {dailyReminder && (
+            <>
+              <View style={[styles.divider, { backgroundColor: colors.border }]} />
+              <TouchableOpacity style={styles.row} onPress={() => setPickingTime(true)} activeOpacity={0.7}>
+                <Text style={[styles.rowLabel, { color: colors.text }]}>Reminder time</Text>
+                <Text style={[styles.rowValue, { color: colors.accent }]}>{formatTime(reminderTime)}</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
+      <TimePickerModal
+        visible={pickingTime}
+        value={reminderTime}
+        onConfirm={t => { setReminderTime(t); setDailyReminderTime(t); }}
+        onClose={() => setPickingTime(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -101,6 +126,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   rowLabel: { fontFamily: 'Nunito_400Regular', fontSize: 15 },
+  rowValue: { fontFamily: 'Nunito_600SemiBold', fontSize: 15 },
   rowHint: { fontFamily: 'Nunito_400Regular', fontSize: 12, marginTop: 2 },
   divider: { height: 1, marginHorizontal: 16 },
 });

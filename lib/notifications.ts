@@ -4,11 +4,11 @@ import * as Notifications from 'expo-notifications';
 
 const KEY_AUTO_PAYMENTS = 'purrfolio_notify_auto_payments';
 const KEY_DAILY_REMINDER = 'purrfolio_notify_daily_reminder';
+const KEY_REMINDER_TIME = 'purrfolio_notify_reminder_time';
 
 const CHANNEL_ID = 'default';
 const DAILY_REMINDER_ID = 'daily-reminder';
-const REMINDER_HOUR = 20;
-const REMINDER_MINUTE = 0;
+const DEFAULT_REMINDER_TIME = '20:00'; // HH:MM, 24-hour
 
 // Show notifications as a banner even while the app is open: auto-added
 // payments are created while the app is in the foreground.
@@ -62,12 +62,22 @@ export async function setDailyReminderEnabled(enabled: boolean): Promise<void> {
   await syncDailyReminder();
 }
 
+export async function getDailyReminderTime(): Promise<string> {
+  return (await AsyncStorage.getItem(KEY_REMINDER_TIME)) ?? DEFAULT_REMINDER_TIME;
+}
+
+export async function setDailyReminderTime(time: string): Promise<void> {
+  await AsyncStorage.setItem(KEY_REMINDER_TIME, time);
+  await syncDailyReminder();
+}
+
 // Makes the scheduled daily reminder match the saved setting. Safe to call repeatedly.
 export async function syncDailyReminder(): Promise<void> {
   try {
     await Notifications.cancelScheduledNotificationAsync(DAILY_REMINDER_ID);
     if (!(await isDailyReminderEnabled()) || !(await hasNotificationPermission())) return;
     await ensureChannel();
+    const [hour, minute] = (await getDailyReminderTime()).split(':').map(Number);
     await Notifications.scheduleNotificationAsync({
       identifier: DAILY_REMINDER_ID,
       content: {
@@ -76,8 +86,8 @@ export async function syncDailyReminder(): Promise<void> {
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.DAILY,
-        hour: REMINDER_HOUR,
-        minute: REMINDER_MINUTE,
+        hour,
+        minute,
         channelId: CHANNEL_ID,
       },
     });
