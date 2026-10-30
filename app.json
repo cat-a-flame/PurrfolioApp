@@ -2,7 +2,7 @@
   "expo": {
     "name": "Purrfolio",
     "slug": "purrfolio",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -31,6 +31,12 @@
       "expo-router",
       "expo-font",
       "expo-local-authentication",
+      [
+        "expo-notifications",
+        {
+          "color": "#7433e6"
+        }
+      ],
       [
         "expo-image-picker",
         {
