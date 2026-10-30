@@ -79,7 +79,7 @@ export default function NotificationsScreen() {
             <View style={{ flex: 1, paddingRight: 12 }}>
               <Text style={[styles.rowLabel, { color: colors.text }]}>Daily reminder</Text>
               <Text style={[styles.rowHint, { color: colors.muted }]}>
-                Remind me every day to log my expenses
+                Remind me daily to add my expenses
               </Text>
             </View>
             <Switch
