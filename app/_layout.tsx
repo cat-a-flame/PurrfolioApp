@@ -16,6 +16,7 @@ import { LoadingScreen } from '@/components/LoadingScreen';
 import { UnlockScreen } from '@/components/UnlockScreen';
 import { isPinEnabled } from '@/lib/security';
 import { needsMfaCode } from '@/lib/mfa';
+import { syncDailyReminder, cancelDailyReminder } from '@/lib/notifications';
 import { BaseCurrencyContext, useBaseCurrencyResolver } from '@/lib/baseCurrencyContext';
 
 SplashScreen.preventAutoHideAsync();
@@ -90,6 +91,13 @@ export default function RootLayout() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // The daily reminder only runs while someone is signed in.
+  const signedIn = !!session;
+  useEffect(() => {
+    if (!authReady) return;
+    if (signedIn) syncDailyReminder(); else cancelDailyReminder();
+  }, [authReady, signedIn]);
+
   useEffect(() => {
     if (!session) return;
     const token = session.access_token;
@@ -145,6 +153,7 @@ export default function RootLayout() {
             <Stack.Screen name="settings/labels" options={{ headerShown: false }} />
             <Stack.Screen name="settings/accounts" options={{ headerShown: false }} />
             <Stack.Screen name="settings/security" options={{ headerShown: false }} />
+            <Stack.Screen name="settings/notifications" options={{ headerShown: false }} />
             <Stack.Screen name="settings/account" options={{ headerShown: false }} />
             <Stack.Screen name="settings/two-factor" options={{ headerShown: false }} />
             <Stack.Screen name="settings/export" options={{ headerShown: false }} />

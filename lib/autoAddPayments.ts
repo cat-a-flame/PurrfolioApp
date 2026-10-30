@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 import { generateDueDates, isoDate } from './recurringUtils';
 import { Events } from './events';
+import { notifyAutoAddedPayments } from './notifications';
 
 let inFlight: Promise<number> | null = null;
 
@@ -27,7 +28,7 @@ async function run(): Promise<number> {
   if (!pmts?.length) return 0;
 
   const actioned = new Set((occs ?? []).map((o: any) => o.recurring_payment_id));
-  let added = 0;
+  const addedNames: string[] = [];
   for (const p of pmts as any[]) {
     if (actioned.has(p.id) || generateDueDates(p, start, end).length === 0) continue;
 
@@ -47,8 +48,11 @@ async function run(): Promise<number> {
       await supabase.from('transactions').delete().eq('id', tx.id);
       continue;
     }
-    added++;
+    addedNames.push(p.name);
   }
-  if (added > 0) Events.emit('transaction-saved', { success: true });
-  return added;
+  if (addedNames.length > 0) {
+    Events.emit('transaction-saved', { success: true });
+    await notifyAutoAddedPayments(addedNames);
+  }
+  return addedNames.length;
 }
