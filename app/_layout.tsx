@@ -152,6 +152,7 @@ export default function RootLayout() {
             <Stack.Screen name="settings/categories" options={{ headerShown: false }} />
             <Stack.Screen name="settings/labels" options={{ headerShown: false }} />
             <Stack.Screen name="settings/accounts" options={{ headerShown: false }} />
+            <Stack.Screen name="settings/menu" options={{ headerShown: false }} />
             <Stack.Screen name="settings/security" options={{ headerShown: false }} />
             <Stack.Screen name="settings/notifications" options={{ headerShown: false }} />
             <Stack.Screen name="settings/account" options={{ headerShown: false }} />

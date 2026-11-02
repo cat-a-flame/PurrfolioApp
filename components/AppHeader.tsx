@@ -102,10 +102,9 @@ export default function AppHeader({ title, rightAction, leading, showBack, onBac
       ],
     },
     {
-      title: 'Data & security',
+      title: '',
       items: [
-        { label: 'Security',        route: '/settings/security', icon: 'lock-closed-outline' },
-        { label: 'Export data',     route: '/settings/export',   icon: 'swap-vertical-outline' },
+        { label: 'Settings', route: '/settings/menu', icon: 'settings-outline' },
       ],
     },
   ];
@@ -173,7 +172,9 @@ export default function AppHeader({ title, rightAction, leading, showBack, onBac
 
                 {sections.map((section) => (
                   <View key={section.title}>
-                    <Text style={[styles.sectionLabel, { color: colors.muted }]}>{section.title}</Text>
+                    {section.title ? (
+                      <Text style={[styles.sectionLabel, { color: colors.muted }]}>{section.title}</Text>
+                    ) : null}
                     {section.items.map((item) => (
                       <TouchableOpacity
                         key={item.label}
