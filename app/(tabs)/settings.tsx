@@ -43,10 +43,14 @@ export default function SettingsScreen() {
       ],
     },
     {
-      title: 'Settings',
+      title: 'Security',
       items: [
         { label: 'Security', route: '/settings/security' },
-        { label: 'Notifications', route: '/settings/notifications' },
+      ],
+    },
+    {
+      title: 'Data',
+      items: [
         { label: 'Export data', route: '/settings/export' },
       ],
     },
