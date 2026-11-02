@@ -2,7 +2,7 @@
   "expo": {
     "name": "Purrfolio",
     "slug": "purrfolio",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -53,7 +53,9 @@
         "expo-build-properties",
         {
           "android": {
-            "gradleVersion": "8.13"
+            "gradleVersion": "8.13",
+            "enableMinifyInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true
           }
         }
       ],
